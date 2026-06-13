@@ -1,6 +1,7 @@
-import { apiKeys } from "../config/apiKeys.js";
+import { apiKeys } from "../store/apiKeyStore.js";
+import {getTenantByApiKeyDb} from "../repositories/apiKeyRepository.js"
 
-export const authenticate = (req, res, next) => {
+export const authenticate = async (req, res, next) => {
 
   const authHeader = req.headers.authorization;
 
@@ -12,15 +13,15 @@ export const authenticate = (req, res, next) => {
 
   const apiKey = authHeader.replace("Bearer ", "");
 
-  const tenantId = apiKeys[apiKey];
+  const tenant = await getTenantByApiKeyDb(apiKey);
 
-  if (!tenantId) {
+  if (!tenant) {
     return res.status(401).json({
       error: "Invalid API key"
     });
   }
 
-  req.tenantId = tenantId;
+  req.tenantId = tenant.tenant_id;
 
   next();
 };

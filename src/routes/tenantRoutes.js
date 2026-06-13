@@ -3,7 +3,9 @@ import express from "express";
 import {
   getTenantConfigApi,
   updateTenantConfig,
-  getTenants
+  getTenants,
+  createTenant,
+  getAllTenantsDbApi
 } from "../controllers/tenantController.js";
 
 import { authenticate }
@@ -27,5 +29,15 @@ router.get(
   "/",
   getTenants
 );
+
+router.post(
+  "/",
+  createTenant
+);
+
+router.get(
+  "/db",
+  getAllTenantsDbApi
+)
 
 export default router;

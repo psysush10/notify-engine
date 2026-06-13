@@ -1,18 +1,24 @@
 import dotenv from "dotenv";
+import path from "path";
+
+import {
+  readJsonFile
+}
+from "../services/storageService.js";
 
 dotenv.config();
 
-export const tenantConfigs = {
-  org_1: {
-    slackEnabled: true,
-    emailEnabled: true,
-    webhookEnabled: true,
-    slackWebhook: process.env.SLACK_WEBHOOK_ORG_1
-  },
+const TENANT_FILE =
+  path.resolve(
+    "src/data/tenants.json"
+  );
 
-  org_2: {
-    slackEnabled: true,
-    emailEnabled: true,
-    webhookEnabled: true
-  }
-};
+export let tenantConfigs =
+  readJsonFile(
+    TENANT_FILE
+  );
+
+export {
+  TENANT_FILE
+}
+

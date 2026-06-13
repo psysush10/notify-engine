@@ -1,0 +1,92 @@
+{
+  "org_1": {
+    "tenantName": "Demo Org 1",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_2": {
+    "tenantName": "Demo Org 1",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781378306686": {
+    "tenantName": "Acme Corp",
+    "slackEnabled": false,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781379182969": {
+    "tenantName": "Zoho Corp",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "https://hooks.slack.com/abc",
+    "emailFrom": "",
+    "webhookUrl": "https://webhook.site/xyz"
+  },
+  "org_1781382289933": {
+    "tenantName": "Wingify",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781383347381": {
+    "tenantName": "CodeRabbit",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781383430101": {
+    "tenantName": "CodeRabbit",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781383674351": {
+    "tenantName": "SimplifyVMS",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781384049777": {
+    "tenantName": "Superfans",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1781386423048": {
+    "tenantName": "Fleksa",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  }
+}

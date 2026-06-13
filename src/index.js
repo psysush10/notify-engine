@@ -8,7 +8,7 @@ import metricsRoutes from "./routes/metricsRoutes.js";
 import { swaggerSpec } from "./config/swagger.js";
 import tenantRoutes from "./routes/tenantRoutes.js";
 import statusRoutes from "./routes/statusRoutes.js"
-
+import integrationRoutes from "./routes/integrationRoutes.js";
 
 
 const app = express();
@@ -44,6 +44,11 @@ app.use(
 app.use(
   "/event-status",
   statusRoutes
+);
+
+app.use(
+ "/tenant/integrations",
+ integrationRoutes
 );
 
 app.listen(PORT, () => {
