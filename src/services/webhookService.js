@@ -1,4 +1,5 @@
 import axios from "axios";
+import { retry } from "../utils/retry.js";
 
 export const triggerWebhook = async (payload) => {
   try {
@@ -9,10 +10,16 @@ export const triggerWebhook = async (payload) => {
       return;
     }
 
-    await axios.post(webhookUrl, payload);
+    await retry(() =>
+    axios.post(
+      webhookUrl,
+      payload
+    )
+  );
 
     console.log("Webhook triggered successfully");
   } catch (error) {
     console.error("Webhook error:", error.message);
+    throw error;
   }
 };
