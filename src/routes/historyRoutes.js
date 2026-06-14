@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticate } from "../middleware/authMiddleware.js";
 import {
   getHistory,
   getTenantHistory
@@ -6,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.get("/", getHistory);
+router.get("/", authenticate, getHistory);
 router.get("/:tenantId", getTenantHistory);
 
 export default router;

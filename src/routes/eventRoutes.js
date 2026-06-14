@@ -5,5 +5,4 @@ import { authenticate } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.post("/", authenticate, handleEvent);
-
 export default router;

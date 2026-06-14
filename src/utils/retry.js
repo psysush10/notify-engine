@@ -1,5 +1,6 @@
 export const retry = async (
   operation,
+  onRetry,
   retries = 3,
   delay = 1000
 ) => {
@@ -19,6 +20,10 @@ export const retry = async (
       console.log(
         `Attempt ${attempt} failed: ${error.message}`
         );
+
+      if ( attempt < retries && onRetry ) {
+         await onRetry();
+      }
 
       if (attempt === retries) {
         throw error;

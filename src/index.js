@@ -9,6 +9,8 @@ import { swaggerSpec } from "./config/swagger.js";
 import tenantRoutes from "./routes/tenantRoutes.js";
 import statusRoutes from "./routes/statusRoutes.js"
 import integrationRoutes from "./routes/integrationRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import { startEventWorker } from "./workers/eventWorker.js";
 
 
 const app = express();
@@ -51,6 +53,12 @@ app.use(
  integrationRoutes
 );
 
+app.use(
+  "/dashboard",
+  dashboardRoutes
+);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  startEventWorker();
 });
