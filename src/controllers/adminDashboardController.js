@@ -164,8 +164,18 @@ th {
 <p>
         <a href="/customer/dashboard">
 👤 Switch to Customer View
-</p>
 </a>
+</p>
+
+<p>
+
+<a href="/admin/tenants">
+
+🏢 Manage Tenants
+
+</a>
+
+</p>
 </hr>
 
         <div class="metrics">
