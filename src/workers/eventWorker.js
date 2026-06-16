@@ -1,14 +1,27 @@
-import {claimPendingEventsDb, recoverStaleProcessingEventsDb } from '../repositories/eventRepository.js' 
+import {claimPendingEventsDb, markDeadEventsDb, recoverStaleProcessingEventsDb } from '../repositories/eventRepository.js' 
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
 
 export const startEventWorker = () => { 
     
     console.log( "Event Worker Started" );
+    const MAX_PROCESSING_ATTEMPTS = 3;
     
     setInterval( async () => { 
 
+        const deadEvents =
+            await markDeadEventsDb(
+                MAX_PROCESSING_ATTEMPTS
+            );
 
-        const recoveredEvents = await recoverStaleProcessingEventsDb();
+        if (deadEvents.length > 0) {
+
+            console.log(
+                `Marked ${deadEvents.length} events DEAD`
+            );
+
+        }
+
+        const recoveredEvents = await recoverStaleProcessingEventsDb(5,MAX_PROCESSING_ATTEMPTS);
 
         if (recoveredEvents.length > 0) {
 
@@ -23,7 +36,7 @@ export const startEventWorker = () => {
         for (const event of events) {
 
             console.log(
-                `Processing ${event.request_id}`
+                `[${event.tenant_id}] Processing ${event.request_id}`
             );
 
             if (!event.payload) {

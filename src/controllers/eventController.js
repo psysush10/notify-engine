@@ -1,8 +1,17 @@
 import { processEvent } from "../services/eventProcessingService.js";
 import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
 import { notificationHistory } from "../store/notificationStore.js";
-import { createEventDb, getEventByRequestIdDb, updateEventStatusDb } from "../repositories/eventRepository.js";
+import { createAuditLogDb, getAuditTimelineDb } from "../repositories/eventAuditRepository.js";
+import {
+  createEventDb,
+  getEventByRequestIdAndTenantDb,
+  updateEventStatusDb,
+  getEventsByTenantDb,
+     } from "../repositories/eventRepository.js";
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
+import { canTenantProcessEvent} from "../services/usageService.js";
+
+
 export const handleEvent = async (req, res) => {
 
   const event = req.body;
@@ -14,6 +23,30 @@ export const handleEvent = async (req, res) => {
  
 
   try {
+
+    const quotaCheck = await canTenantProcessEvent(tenantId);
+
+    if (!quotaCheck.allowed) {
+
+      return res
+        .status(429)
+        .json({
+
+          error:
+            "Plan limit exceeded",
+
+          plan:
+            quotaCheck.plan,
+
+          limit:
+            quotaCheck.limit,
+
+          currentUsage:
+            quotaCheck.currentUsage
+
+        });
+
+    }
 
      await createEventDb({
       requestId,
@@ -36,7 +69,22 @@ export const handleEvent = async (req, res) => {
 
       payload: {
         ...event
-      }
+      },
+
+      replayedFromRequestId: null
+
+    });
+
+    await createAuditLogDb({
+
+      requestId,
+
+      tenantId,
+
+      status: "PENDING",
+
+      message:
+        "Event created"
 
     });
 
@@ -96,6 +144,226 @@ export const handleEvent = async (req, res) => {
     });
   }
 };
+
+export const getEvents = async (req, res) => {
+
+    try {
+
+      const tenantId =
+        req.tenantId;
+
+      const {
+        status,
+        page = 1,
+        limit = 10
+      } = req.query;
+
+      const events =
+        await getEventsByTenantDb(
+          tenantId,
+          status,
+          page,
+          limit
+        );
+
+        console.log(
+      "TENANT ID:",
+      req.tenantId
+    );
+
+      res.json(events);
+
+    } catch (error) {
+
+      res.status(500).json({
+        error: error.message
+      });
+
+    }
+  };
+
+export const getEventByRequestId = async (req, res) => {
+
+    try {
+
+      const {
+        requestId
+      } = req.params;
+
+      const tenantId = req.tenantId;
+
+      const event =
+        await getEventByRequestIdAndTenantDb(
+          requestId,
+          tenantId
+        );
+
+      if (!event) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Event not found"
+          });
+      }
+
+      res.json(event);
+
+    } catch (error) {
+
+      res.status(500).json({
+        error:
+          error.message
+      });
+
+    }
+  };
+
+export const replayEvent = async (req, res) => {
+
+    try {
+
+      const {
+        requestId
+      } = req.params;
+
+      const tenantId =
+        req.tenantId;
+
+      const event =
+        await getEventByRequestIdAndTenantDb(
+          requestId,
+          tenantId
+        );
+
+      if (!event) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Event not found"
+          });
+      }
+
+      const newRequestId =
+        `req_${Date.now()}`;
+
+      const payload = {
+        ...event.payload,
+        requestId: newRequestId
+      };
+
+      payload.requestId =
+        newRequestId;
+
+      await createEventDb({
+
+        requestId:
+          newRequestId,
+
+        tenantId,
+
+        type:
+          payload.type,
+
+        project:
+          payload.project,
+
+        severity:
+          payload.severity,
+
+        status:
+          "PENDING",
+
+        failureReason:
+          null,
+
+        retryCount:
+          0,
+
+        payload,
+
+        replayedFromRequestId: requestId
+      });
+
+      await createAuditLogDb({
+
+        requestId,
+
+        tenantId,
+
+        status:
+          "REPLAYED",
+
+        message:
+          `Replayed as ${newRequestId}`
+
+      });
+
+      await createAuditLogDb({
+
+        requestId:
+          newRequestId,
+
+        tenantId,
+
+        status: "PENDING",
+
+        message:
+          `Created from replay of ${requestId}`
+
+      });
+
+      res.json({
+
+        message:
+          "Replay created",
+
+        newRequestId
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        error:
+          error.message
+
+      });
+
+    }
+  };
+
+export const getEventTimeline = async (req, res) => {
+
+    try {
+
+      const {
+        requestId
+      } = req.params;
+
+      const tenantId =
+        req.tenantId;
+
+      const timeline =
+        await getAuditTimelineDb(
+          requestId,
+          tenantId
+        );
+
+      res.json(timeline);
+
+    } catch (error) {
+
+      res.status(500).json({
+        error:
+          error.message
+      });
+    }
+  };
 
 
 

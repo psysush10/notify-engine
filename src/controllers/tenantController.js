@@ -1,7 +1,7 @@
 import { tenantConfigs, TENANT_FILE } from "../store/tenantStore.js";
 import { writeJsonFile } from "../services/storageService.js";
 import {
-  createTenantDb,getAllTenantsDb
+  createTenantDb,getAllTenantsDb, updateTenantPlanDb
 } from "../repositories/tenantRepository.js";
 
 import {createApiKeyDb} from "../repositories/apiKeyRepository.js"
@@ -133,6 +133,8 @@ export const updateTenantConfig = async (
 
   const tenantId = req.tenantId;
 
+  console.log(req.body);
+
   const updatedConfig = await updateTenantConfigDb(
     tenantId,
     req.body
@@ -147,4 +149,27 @@ export const updateTenantConfig = async (
     message: "Config updated",
     config: updatedConfig
   });
+};
+
+export const updatePlan = async (
+  req,
+  res
+) => {
+
+  const tenantId =
+    req.tenantId;
+
+  const {
+    plan
+  } = req.body;
+
+  const tenant =
+    await updateTenantPlanDb(
+      tenantId,
+      plan
+    );
+
+  res.json(
+    tenant
+  );
 };

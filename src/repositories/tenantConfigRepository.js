@@ -72,6 +72,7 @@ export const updateTenantConfigDb = async (
     config.webhookUrl
   ];
 
+  console.log(values);
   const result = await pool.query(
     query,
     values

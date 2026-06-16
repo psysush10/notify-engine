@@ -5,7 +5,8 @@ import {
   updateTenantConfig,
   getTenants,
   createTenant,
-  getAllTenantsDbApi
+  getAllTenantsDbApi,
+  updatePlan
 } from "../controllers/tenantController.js";
 
 import { authenticate }
@@ -39,5 +40,11 @@ router.get(
   "/db",
   getAllTenantsDbApi
 )
+
+router.put(
+  "/plan",
+  authenticate,
+  updatePlan
+);
 
 export default router;

@@ -11,7 +11,14 @@ import statusRoutes from "./routes/statusRoutes.js"
 import integrationRoutes from "./routes/integrationRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import { startEventWorker } from "./workers/eventWorker.js";
-
+import  usageRoutes  from "./routes/usageRoutes.js"
+import subscriptionRoutes from "./routes/subscriptionRoutes.js";
+import billingRoutes from "./routes/billingRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import tenantProductRoutes from "./routes/tenantProductRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import invoiceRoutes from "./routes/invoiceRoutes.js"
+import customerRoutes from "./routes/customerRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -56,6 +63,46 @@ app.use(
 app.use(
   "/dashboard",
   dashboardRoutes
+);
+
+app.use(
+  "/tenant/usage",
+  usageRoutes
+);
+
+app.use(
+  "/tenant/subscription",
+  subscriptionRoutes
+);
+
+app.use(
+  "/tenant/billing",
+  billingRoutes
+);
+
+app.use(
+  "/products",
+  productRoutes
+);
+
+app.use(
+  "/tenant/products",
+  tenantProductRoutes
+);
+
+app.use(
+ "/admin",
+ adminRoutes
+);
+
+app.use(
+ "/tenant/invoices",
+ invoiceRoutes
+);
+
+app.use(
+  "/customer",
+  customerRoutes
 );
 
 app.listen(PORT, () => {

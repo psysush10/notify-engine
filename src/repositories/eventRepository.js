@@ -14,10 +14,11 @@ export const createEventDb = async (
       status,
       retry_count,
       failure_reason,
-      payload
+      payload,
+      replayed_from_request_id
     )
     VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10
     )
     RETURNING *
   `;
@@ -34,7 +35,8 @@ export const createEventDb = async (
         event.status,
         event.retryCount,
         event.failureReason,
-        JSON.stringify(event.payload)
+        JSON.stringify(event.payload),
+        event.replayedFromRequestId
       ]
     );
 
@@ -98,20 +100,64 @@ export const getEventByRequestIdDb = async (requestId) => {
   return result.rows[0];
 };
 
-export const getEventsByTenantDb = async (tenantId) => {
+export const getEventsByTenantDb = async (tenantId, status, page, limit) => {
 
   console.log("TENANT RECEIVED IN REPO:", tenantId);
 
-  const result = await pool.query(
-    `
-    SELECT *
-    FROM events
-    WHERE tenant_id = $1
-    ORDER BY created_at DESC
-    `,
-    [tenantId]
-  );
+  const offset = (page - 1) * limit;
 
+  let query = `
+      SELECT
+        request_id,
+        replayed_from_request_id
+        event_type,
+        project,
+        severity,
+        status,
+        retry_count,
+        processing_attempts,
+        created_at
+      FROM events
+      WHERE tenant_id = $1
+    `;
+
+  const params = [tenantId];
+
+  if (status) {
+
+      query += `
+        AND status = $2
+      `;
+
+      params.push(status);
+
+      query += `
+        ORDER BY created_at DESC
+        LIMIT $3
+        OFFSET $4
+      `;
+
+      params.push(limit);
+      params.push(offset);
+
+    } else {
+
+      query += `
+        ORDER BY created_at DESC
+        LIMIT $2
+        OFFSET $3
+      `;
+
+      params.push(limit);
+      params.push(offset);
+    }
+
+  const result = await pool.query(
+    query,
+    params
+  );
+  
+ 
   console.log("DB ROWS:", result.rows);
 
   return result.rows;
@@ -278,7 +324,7 @@ export const claimPendingEventsDb = async (
     return result.rows;
   };
 
-export const recoverStaleProcessingEventsDb = async ( timeoutMinutes = 5 ) => {
+export const recoverStaleProcessingEventsDb = async ( timeoutMinutes = 5, maxAttempts = 3 ) => {
 
     const query = `
       UPDATE events
@@ -289,6 +335,7 @@ export const recoverStaleProcessingEventsDb = async ( timeoutMinutes = 5 ) => {
           'Recovered from stale PROCESSING state'
       WHERE
         status = 'PROCESSING'
+        AND processing_attempts < $2
         AND updated_at <
           NOW() - ($1 * INTERVAL '1 minute')
       RETURNING *
@@ -297,7 +344,57 @@ export const recoverStaleProcessingEventsDb = async ( timeoutMinutes = 5 ) => {
     const result =
       await pool.query(
         query,
-        [timeoutMinutes]
+        [timeoutMinutes, maxAttempts]
+      );
+
+    return result.rows;
+  };
+
+export const getEventByRequestIdAndTenantDb = async (
+    requestId,
+    tenantId
+  ) => {
+
+    const query = `
+      SELECT *
+      FROM events
+      WHERE request_id = $1
+      AND tenant_id = $2
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [
+          requestId,
+          tenantId
+        ]
+      );
+
+    return result.rows[0];
+  };
+
+export const markDeadEventsDb = async (
+    maxAttempts = 3
+  ) => {
+
+    const query = `
+      UPDATE events
+      SET
+        status = 'DEAD',
+        updated_at = NOW(),
+        failure_reason =
+          'Exceeded maximum processing attempts'
+      WHERE
+        status = 'PROCESSING'
+        AND processing_attempts >= $1
+      RETURNING *
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [maxAttempts]
       );
 
     return result.rows;
