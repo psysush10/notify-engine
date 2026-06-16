@@ -33,6 +33,11 @@ import {
 }
 from "../constants/plans.js";
 
+import {
+  getApiKey,
+  rotateApiKey
+} from "../services/apiKeyService.js";
+
 export const adminTenantDetail =
 async (
   req,
@@ -48,6 +53,8 @@ async (
       await getTenantById(
         tenantId
       );
+
+    const apiKey = await getApiKey(tenantId);
 
     const subscription =
       await getSubscription(
@@ -88,6 +95,9 @@ async (
       Math.round(
         usageValue / limit * 100
       ) : 0;
+
+      console.log("tentant",tenantId);
+      console.log("api",apiKey);
 
     res.send(`
 
@@ -281,6 +291,58 @@ ${billing.billing_email === "Not Configured"
 `
 : ""
 }
+
+</div>
+
+<div class="card">
+
+<h2>
+API Access
+</h2>
+
+<p>
+
+API key is securely stored
+and cannot be viewed.
+
+</p>
+
+<p>
+
+Rotate API key to generate
+a new credential.
+
+</p>
+
+<br/><br/>
+
+
+
+<form
+
+  method="POST"
+
+  action="/admin/tenant/${tenantId}/apikey/rotate"
+
+>
+
+
+
+<button type="submit">
+
+
+
+Rotate API Key
+
+
+
+</button>
+
+
+
+</form>
+
+
 
 </div>
 

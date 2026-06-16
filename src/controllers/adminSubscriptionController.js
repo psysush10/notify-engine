@@ -3,6 +3,8 @@ import {
 }
 from "../services/subscriptionService.js";
 
+import { createAuditLog } from "../services/auditService.js";
+
 export const upgradeTenantPlan =
 async (
   req,
@@ -21,6 +23,18 @@ async (
     await upgradeSubscription(
       tenantId,
       plan
+    );
+
+    await createAuditLog(
+
+      tenantId,
+
+      "PLAN_UPDATED",
+
+      {
+        newPlan: plan
+      }
+
     );
 
     res.redirect(

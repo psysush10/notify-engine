@@ -5,6 +5,8 @@ updateTenantProductStatus
 }
 from "../services/tenantProductService.js";
 
+import { createAuditLog } from "../services/auditService.js"
+
 export const getTenantProductsApi = async (
   req,
   res
@@ -95,6 +97,20 @@ export const toggleTenantProduct = async (
       tenantId,
       productCode,
       enabled === "true"
+    );
+
+    await createAuditLog(
+
+      tenantId,
+
+      enabled === "true"
+        ? "PRODUCT_ENABLED"
+        : "PRODUCT_DISABLED",
+
+      {
+        productCode
+      }
+
     );
 
     res.redirect(

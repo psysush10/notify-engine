@@ -1,6 +1,5 @@
-import { apiKeys } from "../store/apiKeyStore.js";
 import {getTenantByApiKeyDb} from "../repositories/apiKeyRepository.js"
-
+import { hashApiKey } from "../utils/hash.js";
 export const authenticate = async (req, res, next) => {
 
   const authHeader = req.headers.authorization;
@@ -12,8 +11,9 @@ export const authenticate = async (req, res, next) => {
   }
 
   const apiKey = authHeader.replace("Bearer ", "");
+  const apiKeyHash = hashApiKey(apiKey);
 
-  const tenant = await getTenantByApiKeyDb(apiKey);
+  const tenant = await getTenantByApiKeyDb(apiKeyHash);
 
   if (!tenant) {
     return res.status(401).json({
@@ -22,6 +22,7 @@ export const authenticate = async (req, res, next) => {
   }
 
   req.tenantId = tenant.tenant_id;
+  req.plan = tenant.plan;
 
   next();
 };
