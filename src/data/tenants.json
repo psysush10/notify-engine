@@ -88,5 +88,14 @@
     "slackWebhook": "",
     "emailFrom": "",
     "webhookUrl": ""
+  },
+  "org_1781612437487": {
+    "tenantName": "ONGC",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
   }
 }

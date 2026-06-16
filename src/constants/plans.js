@@ -4,6 +4,6 @@ export const PLAN_LIMITS = {
 
   PRO: 1000,
 
-  ENTERPRISE: Infinity
+  ENTERPRISE: 10000
 
 };
