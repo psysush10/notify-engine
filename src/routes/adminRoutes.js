@@ -11,6 +11,7 @@ import { adminDashboard } from "../controllers/adminDashboardController.js";
 import { adminTenants } from "../controllers/adminTenantController.js";
 import { adminTenantDetail } from "../controllers/adminTenantDetailController.js";
 import { upgradeTenantPlan } from "../controllers/adminSubscriptionController.js";
+import { toggleTenantProduct } from "../controllers/tenantProductController.js";
 const router =
  express.Router();
 
@@ -43,5 +44,11 @@ router.post(
   "/tenant/:tenantId/plan",
   upgradeTenantPlan
 );
+
+router.post(
+  "/tenant/:tenantId/product",
+  toggleTenantProduct
+);
+
 
 export default router;

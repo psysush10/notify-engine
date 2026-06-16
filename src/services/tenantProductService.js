@@ -1,6 +1,7 @@
 import {
   getTenantProductsDb,
-  enableTenantProductDb
+  enableTenantProductDb,
+  updateTenantProductStatusDb
 }
 from "../repositories/tenantProductRepository.js";
 
@@ -20,6 +21,20 @@ export const enableTenantProduct = async (
   return await enableTenantProductDb(
     tenantId,
     productCode
+  );
+
+};
+
+export const updateTenantProductStatus = async (
+  tenantId,
+  productCode,
+  enabled
+) => {
+
+  return await updateTenantProductStatusDb(
+    tenantId,
+    productCode,
+    enabled
   );
 
 };

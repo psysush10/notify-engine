@@ -57,3 +57,49 @@ export const enableTenantProductDb = async (
 
   return result.rows[0];
 };
+
+export const disableTenantProductDb = async (
+  tenantId,
+  productCode
+) => {
+
+  await pool.query(
+    `
+    DELETE
+    FROM tenant_products
+    WHERE tenant_id = $1
+    AND product_code = $2
+    `,
+    [
+      tenantId,
+      productCode
+    ]
+  );
+
+};
+
+export const updateTenantProductStatusDb = async (
+  tenantId,
+  productCode,
+  enabled
+) => {
+
+  const result =
+    await pool.query(
+      `
+      UPDATE tenant_products
+      SET enabled = $3
+      WHERE tenant_id = $1
+      AND product_code = $2
+      RETURNING *
+      `,
+      [
+        tenantId,
+        productCode,
+        enabled
+      ]
+    );
+
+  return result.rows[0];
+
+};

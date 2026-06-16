@@ -8,7 +8,8 @@ from "../middleware/authMiddleware.js";
 
 import {
   getTenantProductsApi,
-  enableTenantProductApi
+  enableTenantProductApi,
+  toggleTenantProduct
 }
 from "../controllers/tenantProductController.js";
 
@@ -25,6 +26,11 @@ router.post(
   "/",
   authenticate,
   enableTenantProductApi
+);
+
+router.post(
+  "/tenant/:tenantId/product",
+  toggleTenantProduct
 );
 
 export default router;

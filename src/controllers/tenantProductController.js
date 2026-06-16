@@ -1,6 +1,7 @@
 import {
   getTenantProducts,
-  enableTenantProduct
+  enableTenantProduct,
+updateTenantProductStatus
 }
 from "../services/tenantProductService.js";
 
@@ -70,6 +71,41 @@ export const enableTenantProductApi = async (
         error.message
 
     });
+
+  }
+
+};
+
+export const toggleTenantProduct = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const tenantId =
+      req.params.tenantId;
+
+    const {
+      productCode,
+      enabled
+    } = req.body;
+
+    await updateTenantProductStatus(
+      tenantId,
+      productCode,
+      enabled === "true"
+    );
+
+    res.redirect(
+      `/admin/tenant/${tenantId}`
+    );
+
+  } catch(error){
+
+    res.status(500).send(
+      error.message
+    );
 
   }
 

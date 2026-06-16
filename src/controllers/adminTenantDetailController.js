@@ -295,6 +295,7 @@ Products
 <tr>
 <th>Product</th>
 <th>Status</th>
+<th>Action</th>
 </tr>
 
 ${products.map(product => `
@@ -306,7 +307,44 @@ ${product.product_code}
 </td>
 
 <td>
-Enabled
+
+${product.enabled
+  ? "🟢 Enabled"
+  : "🔴 Disabled"}
+
+</td>
+
+<td>
+
+<form
+  action="/admin/tenant/${tenantId}/product"
+  method="POST"
+>
+
+<input
+  type="hidden"
+  name="productCode"
+  value="${product.product_code}"
+>
+
+<input
+  type="hidden"
+  name="enabled"
+  value="${!product.enabled}"
+>
+
+<button
+  type="submit"
+>
+
+${product.enabled
+  ? "Disable"
+  : "Enable"}
+
+</button>
+
+</form>
+
 </td>
 
 </tr>
