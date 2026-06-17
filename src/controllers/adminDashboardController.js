@@ -169,6 +169,16 @@ th {
 
 <p>
 
+<a href="/admin/logout">
+
+🚪 Logout
+
+</a>
+
+</p>
+
+<p>
+
 <a href="/admin/tenants">
 
 🏢 Manage Tenants

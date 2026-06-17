@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import eventRoutes from "./routes/eventRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
@@ -20,6 +21,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js"
 import customerRoutes from "./routes/customerRoutes.js";
 
+
 const app = express();
 app.use(express.json());
 
@@ -34,6 +36,17 @@ const PORT = process.env.PORT || 3001;
 app.get("/", (req, res) => {
   res.send("Notify Engine is running 🚀");
 });
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || "notify-engine-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie:{
+    httpOnly: true,
+    secure: false
+  }
+})
+);
 
 // 👇 Route mount
 app.use("/event", eventRoutes);

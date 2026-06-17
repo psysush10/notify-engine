@@ -6,6 +6,12 @@ import {
  getRevenueAnalyticsApi
 }
 from "../controllers/adminController.js";
+import {
+  adminLoginPage,
+  adminLogin,
+  adminLogout
+} from "../controllers/adminAuthController.js"
+import { requireAdmin } from "../middleware/adminAuth.js";
 import { getRevenueAnalytics } from "../services/adminService.js";
 import { adminDashboard } from "../controllers/adminDashboardController.js";
 import { adminTenants } from "../controllers/adminTenantController.js";
@@ -16,6 +22,25 @@ import { rotateApiKeyAdmin } from "../controllers/apiKeyController.js";
 
 const router =
  express.Router();
+
+router.get(
+  "/login",
+  adminLoginPage
+);
+
+router.post(
+  "/login",
+  adminLogin
+);
+
+router.get(
+  "/logout",
+  adminLogout
+);
+
+router.use(
+  requireAdmin
+);
 
 router.get(
  "/overview",
