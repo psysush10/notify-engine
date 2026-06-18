@@ -28,10 +28,15 @@ async () => {
       );
 
     if (!response.ok) {
+      const body = await response.text();
+
+      console.log("FAILED RESPONSE", body);
+
+
 
       throw new Error(
-        `Failed: ${endpoint}`
-      );
+         `Failed: ${endpoint}`
+       );
 
     }
 
