@@ -1,9 +1,12 @@
 import {claimPendingEventsDb, markDeadEventsDb, recoverStaleProcessingEventsDb } from '../repositories/eventRepository.js' 
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
+import { eventRepository } from '../factories/respositoryFactory.js';
+import { logger } from '../platform/logger/logger.js';
+import { workerStatus } from './workerStatus.js';
 
 export const startEventWorker = () => { 
     
-    console.log( "Event Worker Started" );
+    logger.info("Event Worker Started");
     const MAX_PROCESSING_ATTEMPTS = 3;
     
     setInterval( async () => { 
@@ -30,7 +33,12 @@ export const startEventWorker = () => {
         }
 
         const events = await claimPendingEventsDb();
-        console.log(`Claimed ${events.length} events`);
+        workerStatus.lastRun = new Date().toISOString();
+        workerStatus.lastClaimCount = events.length;
+        
+        logger.info("Events claimed", {
+            count: events.length
+        });
         console.log( `Pending events: ${events.length}` );
 
         for (const event of events) {
@@ -41,11 +49,11 @@ export const startEventWorker = () => {
 
             if (!event.payload) {
 
-                console.error(
-                    `Skipping ${event.request_id} - payload missing`
-                );
+                logger.error("Payload missing",{
+                    requestId:event.request_id
+                });
 
-                await updateEventStatusDb(
+                await eventRepository.updateStatus(
                     event.request_id,
                     "FAILED",
                     "Payload missing"

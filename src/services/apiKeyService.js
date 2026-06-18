@@ -10,9 +10,9 @@ import {
 }
 from "../repositories/apiKeyRepository.js";
 import { hashApiKey } from "../utils/hash.js";
+import { platformConfig } from "../config/platform.js";
 
-export const getApiKey =
-async (
+export const getApiKey = async (
   tenantId
 ) => {
 
@@ -22,8 +22,7 @@ async (
 
 };
 
-export const rotateApiKey =
-async (
+export const rotateApiKey = async (
   tenantId
 ) => {
 
@@ -44,9 +43,19 @@ async (
   
   const apiKeyHash = hashApiKey(apiKey);
 
+  const expiresAt = new Date();
+
+  expiresAt.setDate(
+
+    expiresAt.getDate() +
+    platformConfig.apiKeyExpiryDays
+
+  );
+
   await createApiKeyDb(
     apiKeyHash,
-    tenantId
+    tenantId,
+    expiresAt
   );
 
   return apiKey;

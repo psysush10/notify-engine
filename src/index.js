@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+
 import express from "express";
 import session from "express-session";
 import swaggerUi from "swagger-ui-express";
@@ -11,6 +12,7 @@ import tenantRoutes from "./routes/tenantRoutes.js";
 import statusRoutes from "./routes/statusRoutes.js"
 import integrationRoutes from "./routes/integrationRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import healthRoutes from "./routes/healthRoutes.js";
 import { startEventWorker } from "./workers/eventWorker.js";
 import  usageRoutes  from "./routes/usageRoutes.js"
 import subscriptionRoutes from "./routes/subscriptionRoutes.js";
@@ -20,10 +22,24 @@ import tenantProductRoutes from "./routes/tenantProductRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js"
 import customerRoutes from "./routes/customerRoutes.js";
+import { securityConfig } from "./config/index.js";
+import { validateEnvironment } from "./config/env.js";
+import "./platform/sqlite/initSqlite.js";
+import { env } from "./config/env.js";
+
+validateEnvironment();
+console.log(
+
+  "Environment validation passed"
+
+);
 
 
 const app = express();
-app.use(express.json());
+app.use(express.json({
+  limit: "100kb"
+})
+);
 
 app.use(
   express.urlencoded({
@@ -37,14 +53,15 @@ app.get("/", (req, res) => {
   res.send("Notify Engine is running 🚀");
 });
 
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || "notify-engine-secret",
+  secret: env.sessionSecret,
   resave: false,
   saveUninitialized: false,
-  cookie:{
-    httpOnly: true,
-    secure: false
-  }
+  // cookie:{
+  //   httpOnly: true,
+  //   secure: false
+  // }
 })
 );
 
@@ -122,6 +139,11 @@ app.use(
 app.use(
   "/customer",
   customerRoutes
+);
+
+app.use(
+  "/health",
+  healthRoutes
 );
 
 app.listen(PORT, () => {

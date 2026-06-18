@@ -1,8 +1,7 @@
-const ADMIN_USERNAME =
-  "admin";
-
-const ADMIN_PASSWORD =
-  "notify123";
+import {
+  securityConfig
+}
+from "../config/index.js";
 
 export const adminLoginPage =(req,res) => {
 
@@ -104,10 +103,10 @@ export const adminLogin =(req,res) => {
   if (
 
     username ===
-      ADMIN_USERNAME &&
+      securityConfig.adminUsername &&
 
     password ===
-      ADMIN_PASSWORD
+      securityConfig.adminPassword
 
   ) {
 

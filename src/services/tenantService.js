@@ -1,10 +1,6 @@
-import {
-  getTenantByIdDb
-}
-from "../repositories/tenantRepository.js";
+import { tenantRepository } from "../factories/respositoryFactory.js";
 
-export const getTenantById =
-async tenantId =>
-  await getTenantByIdDb(
-    tenantId
-  );
+export const getTenantById = async (tenantId )=> {
+  return await tenantRepository.getById(tenantId);
+}
+  

@@ -38,6 +38,10 @@ import {
   rotateApiKey
 } from "../services/apiKeyService.js";
 
+import {
+  billingConfig
+} from "../config/index.js"
+
 export const adminTenantDetail =
 async (
   req,
@@ -59,7 +63,12 @@ async (
     const subscription =
       await getSubscription(
         tenantId
-      ) || {plan: "FREE"};
+      ) || {
+
+        plan:
+          billingConfig.plans[0]
+
+      };
 
     const usage =
       await getMonthlyUsage(
@@ -465,35 +474,24 @@ events/month
   name="plan"
 >
 
-<option
-  value="FREE"
-  ${subscription.plan === "FREE"
-    ? "selected"
-    : ""
-  }
->
-FREE
-</option>
+${billingConfig.plans.map(plan => `
 
 <option
-  value="PRO"
-  ${subscription.plan === "PRO"
-    ? "selected"
-    : ""
-  }
+
+value="${plan}"
+
+${subscription.plan === plan
+  ? "selected"
+  : ""
+}
+
 >
-PRO
+
+${plan}
+
 </option>
 
-<option
-  value="ENTERPRISE"
-  ${subscription.plan === "ENTERPRISE"
-    ? "selected"
-    : ""
-  }
->
-ENTERPRISE
-</option>
+`).join("")}
 
 </select>
 

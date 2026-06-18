@@ -2,14 +2,10 @@ import { processEvent } from "../services/eventProcessingService.js";
 import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
 import { notificationHistory } from "../store/notificationStore.js";
 import { createAuditLogDb, getAuditTimelineDb } from "../repositories/eventAuditRepository.js";
-import {
-  createEventDb,
-  getEventByRequestIdAndTenantDb,
-  updateEventStatusDb,
-  getEventsByTenantDb,
-     } from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js";
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
 import { canTenantProcessEvent} from "../services/usageService.js";
+import { logger } from "../platform/logger/logger.js";
 
 
 export const handleEvent = async (req, res) => {
@@ -27,6 +23,13 @@ export const handleEvent = async (req, res) => {
     const quotaCheck = await canTenantProcessEvent(tenantId);
 
     if (!quotaCheck.allowed) {
+
+      logger.audit("Quota exceeded",{
+        tenantId,
+        plan: quotaCheck.plan,
+        limit: quotaCheck.limit,
+        currentUsage: quotaCheck.currentUsage
+      });
 
       return res
         .status(429)
@@ -48,7 +51,7 @@ export const handleEvent = async (req, res) => {
 
     }
 
-     await createEventDb({
+     await eventRepository.create({
       requestId,
       tenantId,
       type:
@@ -98,7 +101,11 @@ export const handleEvent = async (req, res) => {
 
     // });
 
-    console.log("Received event:", event);
+    logger.info("Event received",{
+      requestId,
+      tenantId,
+      eventType: event.type
+    });
     
 
     return res.status(202).json({
@@ -110,7 +117,7 @@ export const handleEvent = async (req, res) => {
 
   } catch (error) {
 
-    await updateEventStatusDb(
+    await eventRepository.updateStatus(
     requestId,
     "FAILED",
     error.message
@@ -159,7 +166,7 @@ export const getEvents = async (req, res) => {
       } = req.query;
 
       const events =
-        await getEventsByTenantDb(
+        await eventRepository.getEvents(
           tenantId,
           status,
           page,
@@ -193,7 +200,7 @@ export const getEventByRequestId = async (req, res) => {
       const tenantId = req.tenantId;
 
       const event =
-        await getEventByRequestIdAndTenantDb(
+        await eventRepository.getByRequestIdAndTenant(
           requestId,
           tenantId
         );
@@ -232,7 +239,7 @@ export const replayEvent = async (req, res) => {
         req.tenantId;
 
       const event =
-        await getEventByRequestIdAndTenantDb(
+        await eventRepository.getByRequestIdAndTenant(
           requestId,
           tenantId
         );
@@ -258,7 +265,7 @@ export const replayEvent = async (req, res) => {
       payload.requestId =
         newRequestId;
 
-      await createEventDb({
+      await eventRepository.create({
 
         requestId:
           newRequestId,

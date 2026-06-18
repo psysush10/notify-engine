@@ -4,6 +4,7 @@ import {
 from "../services/subscriptionService.js";
 
 import { createAuditLog } from "../services/auditService.js";
+import { billingConfig } from "../config/billing.js";
 
 export const upgradeTenantPlan =
 async (
@@ -16,9 +17,17 @@ async (
     const tenantId =
       req.params.tenantId;
 
-    const {
-      plan
-    } = req.body;
+    const {plan} = req.body;
+
+    if (!billingConfig.plans.includes(plan)) {
+
+      return res
+        .status(400)
+        .send(
+          "Invalid plan"
+        );
+
+    }
 
     await upgradeSubscription(
       tenantId,

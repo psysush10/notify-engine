@@ -1,8 +1,10 @@
 import { pool } from "../config/db.js";
+import { platformConfig } from "../config/index.js"
 
 export const createApiKeyDb = async (
   apiKeyHash,
-  tenantId
+  tenantId,
+  expiresAt
 ) => {
 
   console.log("CREATING API KEY FOR ", tenantId);
@@ -10,9 +12,10 @@ export const createApiKeyDb = async (
   const query = `
     INSERT INTO api_keys (
       api_key_hash,
-      tenant_id
+      tenant_id,
+      expires_at
     )
-    VALUES ($1, $2)
+    VALUES ($1, $2, $3)
     RETURNING *
   `;
 
@@ -31,7 +34,9 @@ apiKey
   const query = `
     SELECT
       t.tenant_id,
-      t.tenant_name
+      t.tenant_name,
+      t.plan,
+      a.expires_at
     FROM api_keys a
     JOIN tenants t
       ON a.tenant_id = t.tenant_id

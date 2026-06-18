@@ -1,12 +1,14 @@
 import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
 
-import { updateEventStatusDb } from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js"
 
 import { processEvent } from "./eventProcessingService.js";
 
 import { createAuditLogDb } from "../repositories/eventAuditRepository.js";
 
 import { incrementUsageDb } from "../repositories/usageRepository.js";
+
+import { logger } from "../platform/logger/logger.js";
 
 export const processEventInBackground =
   async (
@@ -44,7 +46,7 @@ export const processEventInBackground =
 
       });
 
-      await updateEventStatusDb(
+      await eventRepository.updateStatus(
         requestId,
         eventStatus,
         failureReason
@@ -77,13 +79,16 @@ export const processEventInBackground =
 
     } catch (error) {
 
-      console.error(
-        `[${tenantId}] Background processing failed`,
-        requestId,
-        error.message
+      logger.error("Background processing failed",
+        {
+          tenantId, 
+          requestId,
+          error: error.message 
+
+        }
       );
 
-      await updateEventStatusDb(
+      await eventRepository.updateStatus(
         requestId,
         "FAILED",
         error.message

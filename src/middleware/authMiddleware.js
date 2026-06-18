@@ -1,5 +1,7 @@
 import {getTenantByApiKeyDb} from "../repositories/apiKeyRepository.js"
 import { hashApiKey } from "../utils/hash.js";
+import { logger } from "../platform/logger/logger.js";
+
 export const authenticate = async (req, res, next) => {
 
   const authHeader = req.headers.authorization;
@@ -15,7 +17,18 @@ export const authenticate = async (req, res, next) => {
 
   const tenant = await getTenantByApiKeyDb(apiKeyHash);
 
+  if(tenant?.expires_at && new Date(tenant.expires_at) < new Date()){
+    return res.status(401).json({
+      error: "API key expired"
+    });
+  }
+
   if (!tenant) {
+
+    logger.audit("Invalid API key", {
+      apiKey: apiKey.substring(0,10)
+    });
+    
     return res.status(401).json({
       error: "Invalid API key"
     });
