@@ -10,6 +10,8 @@ import { incrementUsageDb } from "../repositories/usageRepository.js";
 
 import { logger } from "../platform/logger/logger.js";
 
+import { updateEventProcessingStartDb, updateEventProcessingCompleteDb } from "../repositories/eventRepository.js";
+
 export const processEventInBackground =
   async (
     requestId,
@@ -18,6 +20,8 @@ export const processEventInBackground =
   ) => {
 
     try {
+
+      await updateEventProcessingStartDb(requestId);
 
       const config =
         await getTenantConfigDb(
@@ -62,6 +66,8 @@ export const processEventInBackground =
 
       }
 
+      await updateEventProcessingCompleteDb(requestId);
+
       await createAuditLogDb({
 
         requestId,
@@ -77,6 +83,8 @@ export const processEventInBackground =
 
       });
 
+      
+
     } catch (error) {
 
       logger.error("Background processing failed",
@@ -87,6 +95,8 @@ export const processEventInBackground =
 
         }
       );
+
+      await updateEventProcessingCompleteDb(requestId);
 
       await eventRepository.updateStatus(
         requestId,

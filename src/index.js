@@ -1,14 +1,10 @@
 import app from "./server.js";
 
-import { validateEnvironment }
-from "./config/env.js";
+import { validateEnvironment } from "./config/env.js";
 
 import "./platform/sqlite/initSqlite.js";
 
-import {
-  startEventWorker
-}
-from "./workers/eventWorker.js";
+import {startEventWorker} from "./workers/eventWorker.js";
 
 validateEnvironment();
 

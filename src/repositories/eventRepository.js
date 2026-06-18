@@ -374,9 +374,7 @@ export const getEventByRequestIdAndTenantDb = async (
     return result.rows[0];
   };
 
-export const markDeadEventsDb = async (
-    maxAttempts = 3
-  ) => {
+export const markDeadEventsDb = async (maxAttempts = 3) => {
 
     const query = `
       UPDATE events
@@ -399,3 +397,102 @@ export const markDeadEventsDb = async (
 
     return result.rows;
   };
+
+export const updateEventProcessingStartDb = async (requestId) => {
+
+  const query = `
+
+    UPDATE events
+
+    SET
+      processing_started_at = NOW()
+
+    WHERE request_id = $1
+
+  `;
+
+  await pool.query(
+    query,
+    [requestId]
+  );
+
+};
+
+export const updateEventProcessingCompleteDb = async (requestId) => {
+
+  const query = `
+
+    UPDATE events
+
+    SET
+      processing_completed_at = NOW()
+
+    WHERE request_id = $1
+
+  `;
+
+  await pool.query(
+    query,
+    [requestId]
+  );
+
+};
+
+export const getProcessingMetricsDb = async (tenantId) => {
+
+  const query = `
+
+    SELECT
+
+      COUNT(*) AS total_events,
+
+      COUNT(
+        CASE
+        WHEN status = 'SUCCESS'
+        THEN 1
+        END
+      ) AS success_count,
+
+      COUNT(
+        CASE
+        WHEN status = 'FAILED'
+        THEN 1
+        END
+      ) AS failed_count,
+
+      ROUND(
+
+        AVG(
+
+          EXTRACT(
+
+            EPOCH FROM
+            (
+              processing_completed_at -
+              processing_started_at
+            )
+
+          )
+
+        )::numeric,
+
+        2
+
+      ) AS avg_processing_seconds
+
+    FROM events
+
+    WHERE
+      processing_started_at IS NOT NULL
+      AND
+      processing_completed_at IS NOT NULL
+      AND tenant_id = $1
+
+  `;
+
+  const result =
+    await pool.query(query,[tenantId]);
+
+  return result.rows[0];
+
+};

@@ -1,15 +1,11 @@
 import { pool }
 from "../config/db.js";
 
-import {
-  sqliteDb
-}
-from "../platform/sqlite/sqliteDb.js";
+import {sqliteDb} from "../platform/sqlite/sqliteDb.js";
 
-import {
-  workerStatus
-}
-from "../workers/workerStatus.js";
+import { workerStatus } from "../workers/workerStatus.js";
+
+import { getProcessingMetricsDb } from "../repositories/eventRepository.js";
 
 export const health =
 (
@@ -28,8 +24,7 @@ export const health =
 
 };
 
-export const postgresHealth =
-async (
+export const postgresHealth = async (
   req,
   res
 ) => {
@@ -131,3 +126,4 @@ export const workerHealth =
   });
 
 };
+
