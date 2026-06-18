@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start":"node src/index.js",
+    "migrate":"node src/scripts/runMigrations.js",
     "test": "node src/tests/runTests.js"
   },
   "repository": {
