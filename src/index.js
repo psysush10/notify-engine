@@ -1,152 +1,33 @@
-import dotenv from "dotenv";
-dotenv.config();
+import app from "./server.js";
 
-import express from "express";
-import session from "express-session";
-import swaggerUi from "swagger-ui-express";
-import eventRoutes from "./routes/eventRoutes.js";
-import historyRoutes from "./routes/historyRoutes.js";
-import metricsRoutes from "./routes/metricsRoutes.js";
-import { swaggerSpec } from "./config/swagger.js";
-import tenantRoutes from "./routes/tenantRoutes.js";
-import statusRoutes from "./routes/statusRoutes.js"
-import integrationRoutes from "./routes/integrationRoutes.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
-import healthRoutes from "./routes/healthRoutes.js";
-import { startEventWorker } from "./workers/eventWorker.js";
-import  usageRoutes  from "./routes/usageRoutes.js"
-import subscriptionRoutes from "./routes/subscriptionRoutes.js";
-import billingRoutes from "./routes/billingRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import tenantProductRoutes from "./routes/tenantProductRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import invoiceRoutes from "./routes/invoiceRoutes.js"
-import customerRoutes from "./routes/customerRoutes.js";
-import { securityConfig } from "./config/index.js";
-import { validateEnvironment } from "./config/env.js";
+import { validateEnvironment }
+from "./config/env.js";
+
 import "./platform/sqlite/initSqlite.js";
-import { env } from "./config/env.js";
+
+import {
+  startEventWorker
+}
+from "./workers/eventWorker.js";
 
 validateEnvironment();
+
 console.log(
-
   "Environment validation passed"
-
 );
 
+const PORT =
+  process.env.PORT || 3001;
 
-const app = express();
-app.use(express.json({
-  limit: "100kb"
-})
+app.listen(
+  PORT,
+  () => {
+
+    console.log(
+      `Server running on port ${PORT}`
+    );
+
+    startEventWorker();
+
+  }
 );
-
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
-
-const PORT = process.env.PORT || 3001;
-
-app.get("/", (req, res) => {
-  res.send("Notify Engine is running 🚀");
-});
-
-
-app.use(session({
-  secret: env.sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-  // cookie:{
-  //   httpOnly: true,
-  //   secure: false
-  // }
-})
-);
-
-// 👇 Route mount
-app.use("/event", eventRoutes);
-app.use("/history", historyRoutes);
-app.use("/metrics", metricsRoutes);
-app.use("/tenant", tenantRoutes);
-
-app.get("/health", (req, res) => {
-  res.json({
-    status: "UP",
-    service: "Notify Engine",
-    version: "1.0.0",
-    timestamp: new Date().toISOString()
-  });
-});
-
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec)
-);
-
-app.use(
-  "/event-status",
-  statusRoutes
-);
-
-app.use(
- "/tenant/integrations",
- integrationRoutes
-);
-
-app.use(
-  "/dashboard",
-  dashboardRoutes
-);
-
-app.use(
-  "/tenant/usage",
-  usageRoutes
-);
-
-app.use(
-  "/tenant/subscription",
-  subscriptionRoutes
-);
-
-app.use(
-  "/tenant/billing",
-  billingRoutes
-);
-
-app.use(
-  "/products",
-  productRoutes
-);
-
-app.use(
-  "/tenant/products",
-  tenantProductRoutes
-);
-
-app.use(
- "/admin",
- adminRoutes
-);
-
-app.use(
- "/tenant/invoices",
- invoiceRoutes
-);
-
-app.use(
-  "/customer",
-  customerRoutes
-);
-
-app.use(
-  "/health",
-  healthRoutes
-);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  startEventWorker();
-});
