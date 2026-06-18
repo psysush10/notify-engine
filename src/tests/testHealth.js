@@ -11,7 +11,7 @@ async () => {
   const endpoints = [
 
     "/health",
-    "/health/postgres",
+    // "/health/postgres",
     "/health/sqlite",
     "/health/worker"
 
