@@ -35,6 +35,7 @@ export const authenticate = async (req, res, next) => {
   }
 
   req.tenantId = tenant.tenant_id;
+  req.role = "TENANT";
   req.plan = tenant.plan;
 
   next();

@@ -22,6 +22,9 @@ import adminRoutes from "./routes/adminRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
+import { requestIdMiddleware } from "./middleware/requestIdMiddleware.js";
+
 import { swaggerSpec } from "./config/swagger.js";
 import { env } from "./config/env.js";
 
@@ -32,6 +35,8 @@ app.use(
     limit: "100kb"
   })
 );
+
+app.use(requestIdMiddleware);
 
 app.use(
   express.urlencoded({
@@ -140,5 +145,7 @@ app.use(
   "/health",
   healthRoutes
 );
+
+app.use(errorMiddleware);
 
 export default app;

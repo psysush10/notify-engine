@@ -1,10 +1,4 @@
-import {
-
-  createAuditLogDb,
-  getAuditLogsDb
-
-}
-from "../repositories/auditRepository.js";
+import { auditRepository } from "../factories/respositoryFactory.js";
 
 export const createAuditLog =
 async (
@@ -13,7 +7,7 @@ async (
   details
 ) => {
 
-  return await createAuditLogDb(
+  return await auditRepository.createLog(
     tenantId,
     action,
     details
@@ -26,7 +20,7 @@ async (
   tenantId
 ) => {
 
-  return await getAuditLogsDb(
+  return await auditRepository.getLogs(
     tenantId
   );
 

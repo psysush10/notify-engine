@@ -1,6 +1,7 @@
 import {
   tenantRepository,
-  eventRepository
+  eventRepository,
+  auditRepository
 }
 from "../factories/respositoryFactory.js";
 
@@ -33,6 +34,17 @@ async () => {
 
   console.log(
     "PASS Event Repository Loaded"
+  );
+
+  if(!auditRepository){
+    throw new Error(
+      "Audit Repository missing"
+    );
+
+  }
+
+  console.log(
+    "PASS Audit Repository Loaded"
   );
 
 };

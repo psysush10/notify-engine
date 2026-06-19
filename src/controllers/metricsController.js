@@ -1,5 +1,7 @@
 
 import { getMetricsDb, getProcessingMetricsDb } from "../repositories/eventRepository.js";
+import { successResponse, errorResponse } from "../utils/apiResponse.js";
+import { ERROR_CODES } from "../constants/errorCodes.js";
 
 
 export const getMetrics =
@@ -10,13 +12,14 @@ export const getMetrics =
         tenantId
       );
 
-    res.json(metrics);
+    successResponse(res, metrics);
   };
 
 export const getProcessingMetrics =
 async (
   req,
-  res
+  res,
+  next
 ) => {
 
   try {
@@ -24,16 +27,11 @@ async (
     const metrics =
       await getProcessingMetricsDb(tenantId);
 
-    res.json(metrics);
+    successResponse(res, metrics);
 
   } catch(error) {
 
-    res.status(500).json({
-
-      error:
-        error.message
-
-    });
+    next(error);
 
   }
 

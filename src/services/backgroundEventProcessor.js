@@ -87,7 +87,7 @@ export const processEventInBackground =
 
     } catch (error) {
 
-      logger.error("Background processing failed",
+      logger.error(`[${requestId}] Background processing failed`,
         {
           tenantId, 
           requestId,

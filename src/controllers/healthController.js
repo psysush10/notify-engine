@@ -1,5 +1,4 @@
-import { pool }
-from "../config/db.js";
+import { pool } from "../config/db.js";
 
 import {sqliteDb} from "../platform/sqlite/sqliteDb.js";
 
@@ -18,7 +17,9 @@ export const health =
     status: "UP",
 
     timestamp:
-      new Date().toISOString()
+      new Date().toISOString(),
+
+    requestId: req.requestId
 
   });
 

@@ -1,4 +1,5 @@
 
+import { NotFoundError } from "../errors/NotFoundError.js";
 import { getEventByRequestIdDb } from "../repositories/eventRepository.js";
 
 export const getEventStatus = async (req,res)=>{
@@ -9,10 +10,7 @@ export const getEventStatus = async (req,res)=>{
   );
 
  if(!event){
-  return res.status(404).json({
-   message:
-    "Event not found"
-  });
+  throw new NotFoundError("Event not found");
  }
 
  res.json({
