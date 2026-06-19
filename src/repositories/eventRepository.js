@@ -100,7 +100,7 @@ export const getEventByRequestIdDb = async (requestId) => {
   return result.rows[0];
 };
 
-export const getEventsByTenantDb = async (tenantId, status, page, limit) => {
+export const getEventsByTenantDb = async (tenantId, status = null , page = 1 , limit = 50 ) => {
 
   console.log("TENANT RECEIVED IN REPO:", tenantId);
 
@@ -109,7 +109,7 @@ export const getEventsByTenantDb = async (tenantId, status, page, limit) => {
   let query = `
       SELECT
         request_id,
-        replayed_from_request_id
+        replayed_from_request_id,
         event_type,
         project,
         severity,

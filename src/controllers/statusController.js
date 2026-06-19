@@ -1,4 +1,4 @@
-import { notificationHistory } from "../store/notificationStore.js";
+
 import { getEventByRequestIdDb } from "../repositories/eventRepository.js";
 
 export const getEventStatus = async (req,res)=>{

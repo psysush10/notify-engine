@@ -1,4 +1,4 @@
-import { notificationHistory } from "../store/notificationStore.js";
+
 import { getMetricsDb, getProcessingMetricsDb } from "../repositories/eventRepository.js";
 
 

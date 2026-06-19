@@ -1,6 +1,5 @@
 import { processEvent } from "../services/eventProcessingService.js";
 import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
-import { notificationHistory } from "../store/notificationStore.js";
 import { createAuditLogDb, getAuditTimelineDb } from "../repositories/eventAuditRepository.js";
 import { eventRepository } from "../factories/respositoryFactory.js";
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
@@ -129,20 +128,6 @@ export const handleEvent = async (req, res) => {
       "Event processing failed:",
       error.message
     );
-
-
-    // FAILURE HISTORY
-    // notificationHistory.push({
-    //   requestId,
-    //   tenantId,
-    //   type: event.type,
-    //   project: event.project,
-    //   severity: event.severity,
-    //   status: eventStatus,
-    //   error: error.message,
-    //   timestamp: new Date().toISOString(),
-    //   retryCount: "N/A"
-    // });
 
     res.status(500).json({
       requestId,

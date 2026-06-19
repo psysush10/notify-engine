@@ -1,12 +1,7 @@
 import { RATE_LIMITS } from "../constants/rateLimits.js";
 const requestStore = {};
 
-export const rateLimit =
-(
-  req,
-  res,
-  next
-) => {
+export const rateLimit =(req,res,next) => {
 
   const tenantId = req.tenantId;
   const limit = RATE_LIMITS[req.plan];
@@ -16,11 +11,7 @@ export const rateLimit =
       Date.now() / 60000
     );
 
-    
-
-  if (
-    !requestStore[tenantId]
-  ) {
+  if (!requestStore[tenantId]) {
 
     requestStore[tenantId] = {
 
@@ -37,10 +28,7 @@ export const rateLimit =
   const tenantData =
     requestStore[tenantId];
 
-  if (
-    tenantData.minute !==
-    currentMinute
-  ) {
+  if (tenantData.minute !==currentMinute) {
 
     tenantData.minute =
       currentMinute;
@@ -49,16 +37,6 @@ export const rateLimit =
       0;
 
   }
-
-  console.log(
-
-  tenantId,
-  req.plan,
-
-  tenantData.count,
-  limit
-
-);
 
   tenantData.count++;
 
