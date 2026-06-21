@@ -1,11 +1,11 @@
 
 import { NotFoundError } from "../errors/NotFoundError.js";
-import { getEventByRequestIdDb } from "../repositories/eventRepository.js";
+import { getEventStatusService } from "../services/statusService.js";
 
 export const getEventStatus = async (req,res)=>{
 
  const event =
-  await getEventByRequestIdDb(
+  await getEventStatusService(
    req.params.requestId
   );
 

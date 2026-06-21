@@ -4,7 +4,7 @@ import {
 
 }
 from "../services/apiKeyService.js";
-import { createAuditLog } from "../services/auditService.js";
+import { createAdminAuditLog } from "../services/adminAuditService.js";
 export const rotateApiKeyAdmin =
 async (
   req,
@@ -20,7 +20,7 @@ async (
       tenantId
     );
 
-    await createAuditLog(
+    await createAdminAuditLog(
 
       tenantId,
 

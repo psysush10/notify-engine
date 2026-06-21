@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS admin_audit (
+
+  id SERIAL PRIMARY KEY,
+
+  tenant_id VARCHAR(255) NOT NULL,
+
+  action VARCHAR(100) NOT NULL,
+
+  details JSONB,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);

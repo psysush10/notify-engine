@@ -3,7 +3,7 @@ import {
 }
 from "../services/subscriptionService.js";
 
-import { createAuditLog } from "../services/auditService.js";
+import { createAdminAuditLog } from "../services/adminAuditService.js";
 import { billingConfig } from "../config/billing.js";
 
 export const upgradeTenantPlan =
@@ -34,7 +34,7 @@ async (
       plan
     );
 
-    await createAuditLog(
+    await createAdminAuditLog(
 
       tenantId,
 

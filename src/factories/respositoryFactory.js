@@ -5,10 +5,12 @@ import { PostgresUsageRepository } from "../adapters/postgres/PostgresUsageRepos
 import { PostgresSubscriptionRepository } from "../adapters/postgres/PostgresSubscriptionRepository.js";
 import { PostgresBillingRepository } from "../adapters/postgres/PostgresBillingRepository.js";
 import { PostgresInvoiceRepository } from "../adapters/postgres/PostgresInvoiceRepository.js";
+import {PostgresAdminAuditRepository } from "../adapters/postgres/PostgresAdminAuditRepository.js"
 
 export const tenantRepository = new PostgresTenantRepository();
 export const eventRepository = new PostgresEventRepository();
 export const auditRepository = new PostgresAuditRepository();
+export const adminAuditRepository = new PostgresAdminAuditRepository();
 export const usageRepository = new PostgresUsageRepository();
 export const subscriptionRepository = new PostgresSubscriptionRepository();
 export const billingRepository = new PostgresBillingRepository();

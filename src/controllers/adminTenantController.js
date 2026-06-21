@@ -1,7 +1,4 @@
-import {
-  getAllTenantsDb
-}
-from "../repositories/tenantRepository.js";
+import { getAllTenantsService } from "../services/adminTenantService.js";
 
 export const adminTenants =
 async (
@@ -12,7 +9,7 @@ async (
   try {
 
     const tenants =
-      await getAllTenantsDb();
+      await getAllTenantsService();
 
     res.send(`
 

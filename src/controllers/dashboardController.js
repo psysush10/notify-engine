@@ -1,10 +1,10 @@
-import { getDashboardDb } from "../repositories/eventRepository.js";
+import { getDashboardService } from "../services/dashboardService.js";
 
 export const getDashboard =
     async (req, res) => {
 
         const dashboard =
-            await getDashboardDb();
+            await getDashboardService();
 
         res.json({
             totalEvents:

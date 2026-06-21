@@ -1,5 +1,5 @@
 
-import { getMetricsDb, getProcessingMetricsDb } from "../repositories/eventRepository.js";
+import { getMetricsService, getProcessingMetricsService } from "../services/metricsService.js";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
 import { ERROR_CODES } from "../constants/errorCodes.js";
 
@@ -8,9 +8,7 @@ export const getMetrics =
   async (req, res) => {
     const tenantId = req.tenantId;
     const metrics =
-      await getMetricsDb(
-        tenantId
-      );
+      await getMetricsService(tenantId);
 
     successResponse(res, metrics);
   };
@@ -26,7 +24,7 @@ async (
     
     const tenantId = req.tenantId;
     const metrics =
-      await getProcessingMetricsDb(tenantId);
+      await getProcessingMetricsService(tenantId);
 
     successResponse(res, metrics);
 

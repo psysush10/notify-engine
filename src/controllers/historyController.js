@@ -1,20 +1,13 @@
 
-import { getEventsByTenantDb } from "../repositories/eventRepository.js";
+import { getHistoryService } from "../services/historyService.js";
 
 
 export const getHistory =
 async (req,res)=>{
-
-
-  console.log(
-    "REQ TENANT:",
-    req.tenantId
-  );
   const history =
-    await getEventsByTenantDb(
+    await getHistoryService(
       req.tenantId
     );
-console.log("HISTORY:", history);
   res.json(history);
 };
 
