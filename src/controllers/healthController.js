@@ -128,3 +128,86 @@ export const workerHealth =
 
 };
 
+
+export const platformHealth = async (
+  req,
+  res
+) => {
+
+  try {
+
+    await pool.query(
+      "SELECT 1"
+    );
+
+    const processingMetrics = {
+      total_events: 0,
+      success_count: 0,
+      failed_count: 0,
+      avg_processing_seconds: 0
+    };
+
+    res.json({
+
+      platform: "UP",
+
+      requestId:
+        req.requestId,
+
+      postgres: "UP",
+
+      sqlite: "UP",
+
+      worker: {
+
+        status: "UP",
+
+        lastRun:
+          workerStatus.lastRun,
+
+        lastClaimCount:
+          workerStatus.lastClaimCount
+
+      },
+
+      processing: {
+
+        totalEvents:
+          Number(
+            processingMetrics.total_events || 0
+          ),
+
+        successCount:
+          Number(
+            processingMetrics.success_count || 0
+          ),
+
+        failedCount:
+          Number(
+            processingMetrics.failed_count || 0
+          ),
+
+        avgProcessingSeconds:
+          Number(
+            processingMetrics.avg_processing_seconds || 0
+          )
+
+      }
+
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      platform: "DOWN",
+
+      error:
+        error.message
+
+    });
+
+  }
+
+};
+

@@ -5,13 +5,16 @@
 - [x] TenantRepository
 - [x] EventRepository
 - [x] AuditRepository
+- [x] UsageRepository
+- [x] SubscriptionRepository
+- [x] BillingRepository
+- [x] InvoiceRepository
 
 ## Pending
 
-- [ ] UsageRepository
-- [ ] SubscriptionRepository
-- [ ] BillingRepository
-- [ ] InvoiceRepository
+
+
+
 
 
 Notes:

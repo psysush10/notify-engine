@@ -2,7 +2,7 @@ import {
   getUsageSummary,
   getMonthlyUsageSummary
 }
-from "../services/billingService.js";
+from "../services/usageService.js";
 
 export const getUsage = async (
   req,

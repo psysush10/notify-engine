@@ -6,6 +6,7 @@ import {
   postgresHealth,
   sqliteHealth,
   workerHealth,
+  platformHealth
 
 }
 from "../controllers/healthController.js";
@@ -31,6 +32,11 @@ router.get(
 router.get(
   "/worker",
   workerHealth
+);
+
+router.get(
+  "/platform",
+  platformHealth
 );
 
 export default router;

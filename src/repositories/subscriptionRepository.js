@@ -15,6 +15,7 @@ export const getSubscriptionDb = async (tenantId) => {
       [tenantId]
     );
 
+
   return result.rows[0];
 };
 

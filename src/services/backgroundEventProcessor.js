@@ -6,7 +6,7 @@ import { processEvent } from "./eventProcessingService.js";
 
 import { createAuditLogDb } from "../repositories/eventAuditRepository.js";
 
-import { incrementUsageDb } from "../repositories/usageRepository.js";
+import { usageRepository } from "../factories/respositoryFactory.js";
 
 import { logger } from "../platform/logger/logger.js";
 
@@ -60,7 +60,7 @@ export const processEventInBackground =
         eventStatus === "SUCCESS"
       ) {
 
-        await incrementUsageDb(
+        await usageRepository.incrementUsage(
           tenantId
         );
 

@@ -1,15 +1,10 @@
-import {
-  getSubscriptionDb,
-  expireActiveSubscriptionDb,
-  createSubscriptionDb
-}
-from "../repositories/subscriptionRepository.js";
+import { subscriptionRepository } from "../factories/respositoryFactory.js";
 
 import { updateTenantPlanDb } from "../repositories/tenantRepository.js";
 
 export const getSubscription = async (tenantId) => {
 
-  return await getSubscriptionDb(
+  return await subscriptionRepository.getSubscription(
     tenantId
   );
 
@@ -20,7 +15,7 @@ export const upgradeSubscription = async (
   plan
 ) => {
 
-  await expireActiveSubscriptionDb(
+  await subscriptionRepository.expireActiveSubscription(
     tenantId
   );
 
@@ -29,7 +24,7 @@ export const upgradeSubscription = async (
     plan
   );
 
-  return await createSubscriptionDb(
+  return await subscriptionRepository.createSubscription(
     tenantId,
     plan
   );

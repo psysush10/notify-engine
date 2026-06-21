@@ -1,9 +1,7 @@
 import {
- createInvoiceDb,
- getInvoicesByTenantDb,
- updateInvoiceStatusDb
+invoiceRepository
 }
-from "../repositories/invoiceRepository.js";
+from "../factories/respositoryFactory.js";
 
 import {
  getInvoicePreview
@@ -18,7 +16,7 @@ export const generateInvoice = async (tenantId) => {
     );
 
   const invoice =
-    await createInvoiceDb({
+    await invoiceRepository.createInvoice({
 
       tenantId,
 
@@ -51,7 +49,7 @@ export const generateInvoice = async (tenantId) => {
 
 export const getInvoices = async (tenantId) => {
 
-  return await getInvoicesByTenantDb(
+  return await invoiceRepository.getInvoices(
     tenantId
   );
 
@@ -61,7 +59,7 @@ export const markInvoicePaid = async (
   invoiceId
 ) => {
 
-  return await updateInvoiceStatusDb(
+  return await invoiceRepository.updateInvoiceStatus(
     invoiceId,
     "PAID"
   );

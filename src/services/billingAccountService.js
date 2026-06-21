@@ -1,13 +1,9 @@
-import {
-  getBillingAccountDb,
-  upsertBillingAccountDb
-}
-from "../repositories/billingRepository.js";
+import { billingRepository } from "../factories/respositoryFactory.js";
 
 export const getBillingAccount =
 async (tenantId) => {
 
-  return await getBillingAccountDb(
+  return await billingRepository.getBillingAccount(
     tenantId
   );
 
@@ -20,7 +16,7 @@ async (
   companyName
 ) => {
 
-  return await upsertBillingAccountDb(
+  return await billingRepository.updateBillingAccount(
     tenantId,
     billingEmail,
     companyName
