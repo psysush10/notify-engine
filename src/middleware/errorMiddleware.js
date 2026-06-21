@@ -1,7 +1,5 @@
-import {
-  errorResponse
-}
-from "../utils/apiResponse.js";
+import { errorResponse } from "../utils/apiResponse.js";
+import { logger } from "../platform/logger/logger.js";
 
 export const errorMiddleware =
 (
@@ -11,9 +9,11 @@ export const errorMiddleware =
   next
 ) => {
 
-  console.error(
-    `[${req.requestId}]`,
-    error
+  logger.error("Unhandled application error",
+    {
+      requestId: req.requestId,
+      error: error.message
+    }
   );
 
   if (

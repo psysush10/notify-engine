@@ -87,10 +87,17 @@ export const processEventInBackground =
 
     } catch (error) {
 
-      logger.error(`[${requestId}] Background processing failed`,
-        {
-          tenantId, 
+      await createAuditLogDb({
+        requestId,
+        tenantId,
+        status: "FAILED",
+        message: error.message
+      });
+
+      logger.error("Background processing failed",
+        { 
           requestId,
+          tenantId,
           error: error.message 
 
         }

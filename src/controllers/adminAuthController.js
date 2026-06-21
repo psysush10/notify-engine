@@ -100,6 +100,20 @@ export const adminLogin =(req,res) => {
     password
   } = req.body;
 
+  console.log({
+
+  username,
+
+  password,
+
+  expectedUsername:
+    securityConfig.adminUsername,
+
+  expectedPassword:
+    securityConfig.adminPassword
+
+});
+
   if (
 
     username ===

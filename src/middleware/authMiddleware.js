@@ -1,6 +1,7 @@
 import {getTenantByApiKeyDb} from "../repositories/apiKeyRepository.js"
 import { hashApiKey } from "../utils/hash.js";
 import { logger } from "../platform/logger/logger.js";
+import { ROLES } from "../constants/roles.js";
 
 export const authenticate = async (req, res, next) => {
 
@@ -35,7 +36,16 @@ export const authenticate = async (req, res, next) => {
   }
 
   req.tenantId = tenant.tenant_id;
-  req.role = "TENANT";
+
+  logger.audit(
+    "Tenant authenticated",
+    {
+      requestId: req.requestId,
+      tenantId: tenant.tenant_id
+    }
+  );
+  
+  req.role = ROLES.TENANT;
   req.plan = tenant.plan;
 
   next();

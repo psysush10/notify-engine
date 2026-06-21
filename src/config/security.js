@@ -7,3 +7,6 @@ export const securityConfig = {
   adminPassword:env.adminPassword
 
 };
+
+console.log(process.env.ADMIN_USERNAME);
+console.log(process.env.ADMIN_PASSWORD);

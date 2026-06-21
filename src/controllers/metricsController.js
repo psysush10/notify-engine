@@ -23,6 +23,7 @@ async (
 ) => {
 
   try {
+    
     const tenantId = req.tenantId;
     const metrics =
       await getProcessingMetricsDb(tenantId);

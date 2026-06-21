@@ -86,7 +86,7 @@ export const handleEvent = async (req, res) => {
       status: "PENDING",
 
       message:
-        "Event created"
+        "Event accepted"
 
     });
 

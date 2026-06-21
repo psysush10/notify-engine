@@ -61,6 +61,7 @@ router.get(
 
 router.get(
  "/dashboard",
+ authorize(ROLES.ADMIN),
  adminDashboard
 );
 
