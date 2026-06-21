@@ -1,21 +1,11 @@
 import { tenantConfigs, TENANT_FILE } from "../store/tenantStore.js";
-import { writeJsonFile } from "../services/storageService.js";
 import {
-  createTenantDb,getAllTenantsDb, updateTenantPlanDb
-} from "../repositories/tenantRepository.js";
-
-import {createApiKeyDb} from "../repositories/apiKeyRepository.js"
-import {
-  createTenantConfigDb,
-  getTenantConfigDb,
-  updateTenantConfigDb
-}
-from "../repositories/tenantConfigRepository.js";
-import {
- generateTenantId,
- generateApiKey
-}
-from "../utils/idGenerator.js";
+  createTenantService,
+  getAllTenantsService,
+  getTenantConfigService,
+  updateTenantConfigService,
+  updatePlanService
+} from "../services/tenantService.js";
 
 import {
  apiKeys,
@@ -23,8 +13,7 @@ import {
 }
 from "../store/apiKeyStore.js";
 
-export const createTenant =  
-  async (req, res) => {
+export const createTenant =  async (req, res) => {
 
     const tenantName =
       req.body.tenantName;
@@ -36,59 +25,14 @@ export const createTenant =
       });
     }
 
-    const tenantId =
-      generateTenantId();
-
-    const apiKey =
-      generateApiKey();
-
-    tenantConfigs[tenantId] = {
-      tenantName,
-
-      slackEnabled: true,
-      emailEnabled: true,
-      webhookEnabled: true,
-
-      slackWebhook: "",
-      emailFrom: "",
-      webhookUrl: ""
-    };
-
-    writeJsonFile(
-      TENANT_FILE,
-      tenantConfigs
-    );
-
-    apiKeys[apiKey] =
-      tenantId;
-
-    writeJsonFile(
-      API_KEY_FILE,
-      apiKeys
-    );
-
-    await createTenantDb(
-      tenantId,
-      tenantName
-    );
-
-    await createApiKeyDb(
-      apiKey,
-      tenantId
-    );
-
-    await createTenantConfigDb(
-      tenantId
-    );
+    const result = await createTenantService(tenantName);
 
     res.status(201).json({
-      tenantId,
-      apiKey
+      result
     });
   };
 
-export const getTenants =
- (req,res)=>{
+export const getTenants = (req,res)=>{
 
   res.json(
    Object.keys(
@@ -101,18 +45,17 @@ export const getTenants =
   );
 };
 
-export const getAllTenantsDbApi =
-async (req,res)=>{
+export const getAllTenantsDbApi = async (req,res)=>{
 
  const tenants =
-  await getAllTenantsDb();
+  await getAllTenantsService();
 
  res.json(tenants);
 };
 
 export const getTenantConfigApi = async (req, res) => {
   const tenantId = req.tenantId;
-  const config = await getTenantConfigDb(tenantId);
+  const config = await getTenantConfigService(tenantId);
 
   if(!config){
     return res.status(404).json({
@@ -135,15 +78,10 @@ export const updateTenantConfig = async (
 
   console.log(req.body);
 
-  const updatedConfig = await updateTenantConfigDb(
+  const updatedConfig = await updateTenantConfigService(
     tenantId,
     req.body
   );
-
-  writeJsonFile(
-  TENANT_FILE,
-  tenantConfigs
-);
 
   res.json({
     message: "Config updated",
@@ -164,7 +102,7 @@ export const updatePlan = async (
   } = req.body;
 
   const tenant =
-    await updateTenantPlanDb(
+    await updatePlanService(
       tenantId,
       plan
     );

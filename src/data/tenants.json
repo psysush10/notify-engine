@@ -97,5 +97,32 @@
     "slackWebhook": "",
     "emailFrom": "",
     "webhookUrl": ""
+  },
+  "org_1782066411984": {
+    "tenantName": "Athena Health",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1782066625467": {
+    "tenantName": "Athena Health",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1782066948013": {
+    "tenantName": "Athena Health",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
   }
 }

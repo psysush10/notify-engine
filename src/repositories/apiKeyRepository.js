@@ -21,7 +21,7 @@ export const createApiKeyDb = async (
 
   const result = await pool.query(
     query,
-    [apiKeyHash, tenantId]
+    [apiKeyHash, tenantId, expiresAt]
   );
 
   return result.rows[0];

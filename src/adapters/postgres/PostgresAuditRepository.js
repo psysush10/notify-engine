@@ -23,10 +23,12 @@ extends AuditRepository {
   }
 
   async getLogs(
+    requestId,
     tenantId
   ) {
 
     return await getAuditTimelineDb(
+      requestId,
       tenantId
     );
 

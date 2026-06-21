@@ -1,7 +1,6 @@
 import { processEvent } from "../services/eventProcessingService.js";
 import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
-import { createAuditLogDb, getAuditTimelineDb } from "../repositories/eventAuditRepository.js";
-import { eventRepository } from "../factories/respositoryFactory.js";
+import { eventRepository, auditRepository } from "../factories/respositoryFactory.js";
 import { processEventInBackground } from "../services/backgroundEventProcessor.js";
 import { canTenantProcessEvent} from "../services/usageService.js";
 import { logger } from "../platform/logger/logger.js";
@@ -77,7 +76,7 @@ export const handleEvent = async (req, res) => {
 
     });
 
-    await createAuditLogDb({
+    await auditRepository.createLog({
 
       requestId,
 
@@ -280,7 +279,7 @@ export const replayEvent = async (req, res) => {
         replayedFromRequestId: requestId
       });
 
-      await createAuditLogDb({
+      await auditRepository.createLog({
 
         requestId,
 
@@ -294,7 +293,7 @@ export const replayEvent = async (req, res) => {
 
       });
 
-      await createAuditLogDb({
+      await auditRepository.createLog({
 
         requestId:
           newRequestId,
@@ -341,7 +340,7 @@ export const getEventTimeline = async (req, res) => {
         req.tenantId;
 
       const timeline =
-        await getAuditTimelineDb(
+        await auditRepository.getLogs(
           requestId,
           tenantId
         );

@@ -3,8 +3,8 @@ import express from "express";
 import {
   getTenantConfigApi,
   updateTenantConfig,
-  getTenants,
   createTenant,
+  getTenants,
   getAllTenantsDbApi,
   updatePlan
 } from "../controllers/tenantController.js";
