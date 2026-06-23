@@ -18,6 +18,10 @@ import tenantProductRoutes from "./routes/tenantProductRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import testJwtRoutes from "./routes/testJwtRoutes.js";
+import accountRoutes from "./routes/accountRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { requestIdMiddleware } from "./middleware/requestIdMiddleware.js";
@@ -136,6 +140,26 @@ app.use(
 app.use(
   "/customer",
   customerRoutes
+);
+
+app.use(
+  "/auth",
+  authRoutes
+);
+
+app.use(
+  "/users",
+  userRoutes
+);
+
+app.use(
+  "/jwt",
+  testJwtRoutes
+);
+
+app.use(
+  "/account",
+  accountRoutes
 );
 
 app.use(

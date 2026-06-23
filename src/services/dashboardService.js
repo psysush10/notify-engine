@@ -1,8 +1,8 @@
-import { getDashboardDb } from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js";
 
 export const getDashboardService =
 async () => {
 
-  return await getDashboardDb();
+  return await eventRepository.getDashboard();
 
 };

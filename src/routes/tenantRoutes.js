@@ -1,5 +1,7 @@
 import express from "express";
 
+import { ROLES } from "../constants/roles.js";
+
 import {
   getTenantConfigApi,
   updateTenantConfig,
@@ -9,8 +11,10 @@ import {
   updatePlan
 } from "../controllers/tenantController.js";
 
-import { authenticate }
-from "../middleware/authMiddleware.js";
+import { authenticate } from "../middleware/authMiddleware.js";
+import { verifyJwt } from "../middleware/verifyJwt.js";
+import { authorize } from "../middleware/authorize.js";
+
 
 const router = express.Router();
 
@@ -22,7 +26,8 @@ router.get(
 
 router.put(
   "/config",
-  authenticate,
+  verifyJwt,
+  authorize( ROLES.TENANT_ADMIN, ROLES.TENANT_OPERATOR),
   updateTenantConfig
 );
 

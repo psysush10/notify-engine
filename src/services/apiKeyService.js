@@ -1,14 +1,7 @@
 import crypto
 from "crypto";
 
-import {
-
-  getApiKeyDb,
-  createApiKeyDb,
-  deleteApiKeyDb
-
-}
-from "../repositories/apiKeyRepository.js";
+import { apiKeyRepository } from "../factories/respositoryFactory.js";
 import { hashApiKey } from "../utils/hash.js";
 import { platformConfig } from "../config/platform.js";
 
@@ -16,7 +9,7 @@ export const getApiKey = async (
   tenantId
 ) => {
 
-  return await getApiKeyDb(
+  return await apiKeyRepository.getApiKey(
     tenantId
   );
 
@@ -31,7 +24,7 @@ export const rotateApiKey = async (
 // inside database transaction
 // for safe key rotation
 
-  await deleteApiKeyDb(
+  await apiKeyRepository.deleteApiKey(
     tenantId
   );
 
@@ -52,7 +45,7 @@ export const rotateApiKey = async (
 
   );
 
-  await createApiKeyDb(
+  await apiKeyRepository.createApiKey(
     apiKeyHash,
     tenantId,
     expiresAt

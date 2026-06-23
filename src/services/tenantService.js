@@ -1,13 +1,4 @@
-import { tenantRepository } from "../factories/respositoryFactory.js";
-import { createTenantDb, getAllTenantsDb, updateTenantPlanDb } from "../repositories/tenantRepository.js";
-import {createApiKeyDb} from "../repositories/apiKeyRepository.js";
-
-import {
-  createTenantConfigDb,
-  getTenantConfigDb,
-  updateTenantConfigDb
-}
-from "../repositories/tenantConfigRepository.js";
+import { tenantRepository, apiKeyRepository, tenantConfigRepository, tenantUserRepository } from "../factories/respositoryFactory.js";
 
 import {
   generateTenantId,
@@ -26,6 +17,8 @@ import {
   API_KEY_FILE
 }
 from "../store/apiKeyStore.js";
+
+import { hashApiKey } from "../utils/hash.js";
 
 import { writeJsonFile } from "./storageService.js";
 
@@ -74,19 +67,27 @@ export const createTenantService = async (tenantName) => {
 
 
 
-  await createTenantDb(
+  await tenantRepository.create(
     tenantId,
     tenantName
   );
 
-  await createApiKeyDb(
-    apiKey,
+  const apiKeyHash = hashApiKey(apiKey);
+
+  await apiKeyRepository.createApiKey(
+    apiKeyHash,
     tenantId,
     expiresAt
   );
 
-  await createTenantConfigDb(
+  await tenantConfigRepository.createConfig(
     tenantId
+  );
+
+  await tenantUserRepository.create(
+    tenantId,
+    `admin@${tenantId}.notify.local`,
+    "TENANT_ADMIN"
   );
 
 
@@ -99,13 +100,13 @@ export const createTenantService = async (tenantName) => {
 
 export const getAllTenantsService = async () => {
 
-  return await getAllTenantsDb();
+  return await tenantRepository.getAll();
 
 };
 
 export const getTenantConfigService = async (tenantId) => {
 
-  return await getTenantConfigDb(
+  return await tenantConfigRepository.getConfig(
     tenantId
   );
 
@@ -116,7 +117,7 @@ export const updateTenantConfigService = async (
   config
 ) => {
 
-  return await updateTenantConfigDb(
+  return await tenantConfigRepository.updateConfig(
     tenantId,
     config
   );
@@ -128,7 +129,7 @@ export const updatePlanService = async (
   plan
 ) => {
 
-  return await updateTenantPlanDb(
+  return await tenantRepository.updatePlan(
     tenantId,
     plan
   );

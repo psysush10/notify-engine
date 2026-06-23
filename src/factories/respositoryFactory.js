@@ -5,7 +5,10 @@ import { PostgresUsageRepository } from "../adapters/postgres/PostgresUsageRepos
 import { PostgresSubscriptionRepository } from "../adapters/postgres/PostgresSubscriptionRepository.js";
 import { PostgresBillingRepository } from "../adapters/postgres/PostgresBillingRepository.js";
 import { PostgresInvoiceRepository } from "../adapters/postgres/PostgresInvoiceRepository.js";
-import {PostgresAdminAuditRepository } from "../adapters/postgres/PostgresAdminAuditRepository.js"
+import { PostgresAdminAuditRepository } from "../adapters/postgres/PostgresAdminAuditRepository.js"
+import { PostgresApiKeyRepository } from "../adapters/postgres/PostgresApiKeyRepository.js";
+import { PostgresTenantConfigRepository } from "../adapters/postgres/PostgresTenantConfigRepository.js";
+import { PostgresTenantUserRepository } from "../adapters/postgres/PostgresTenantUserRepository.js";
 
 export const tenantRepository = new PostgresTenantRepository();
 export const eventRepository = new PostgresEventRepository();
@@ -15,3 +18,6 @@ export const usageRepository = new PostgresUsageRepository();
 export const subscriptionRepository = new PostgresSubscriptionRepository();
 export const billingRepository = new PostgresBillingRepository();
 export const invoiceRepository = new PostgresInvoiceRepository();
+export const apiKeyRepository = new PostgresApiKeyRepository();
+export const tenantConfigRepository = new PostgresTenantConfigRepository();
+export const tenantUserRepository = new PostgresTenantUserRepository();

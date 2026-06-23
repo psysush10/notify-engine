@@ -1,11 +1,8 @@
-import {
-  getAllTenantsDb
-}
-from "../repositories/tenantRepository.js";
+import { tenantRepository } from "../factories/respositoryFactory.js";
 
 export const getAllTenantsService =
 async () => {
 
-  return await getAllTenantsDb();
+  return await tenantRepository.getAll();
 
 };

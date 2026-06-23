@@ -1,16 +1,9 @@
-import { getTenantConfigDb } from "../repositories/tenantConfigRepository.js";
-
-import { eventRepository } from "../factories/respositoryFactory.js"
-
 import { processEvent } from "./eventProcessingService.js";
 
-import { createAuditLogDb } from "../repositories/eventAuditRepository.js";
-
-import { usageRepository } from "../factories/respositoryFactory.js";
+import { eventRepository, usageRepository, auditRepository, tenantConfigRepository} from "../factories/respositoryFactory.js";
 
 import { logger } from "../platform/logger/logger.js";
 
-import { updateEventProcessingStartDb, updateEventProcessingCompleteDb } from "../repositories/eventRepository.js";
 
 export const processEventInBackground =
   async (
@@ -21,10 +14,10 @@ export const processEventInBackground =
 
     try {
 
-      await updateEventProcessingStartDb(requestId);
+      await eventRepository.updateProcessingStart(requestId);
 
       const config =
-        await getTenantConfigDb(
+        await tenantConfigRepository.getConfig(
           tenantId
         );
 
@@ -66,9 +59,9 @@ export const processEventInBackground =
 
       }
 
-      await updateEventProcessingCompleteDb(requestId);
+      await eventRepository.updateProcessingComplete(requestId);
 
-      await createAuditLogDb({
+      await auditRepository.createLog({
 
         requestId,
 
@@ -87,7 +80,7 @@ export const processEventInBackground =
 
     } catch (error) {
 
-      await createAuditLogDb({
+      await auditRepository.createLog({
         requestId,
         tenantId,
         status: "FAILED",

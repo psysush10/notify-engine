@@ -1,11 +1,11 @@
-import { getEventsByTenantDb } from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js";
 
 export const getHistoryService =
 async (
   tenantId
 ) => {
 
-  return await getEventsByTenantDb(
+  return await eventRepository.getEvents(
     tenantId
   );
 

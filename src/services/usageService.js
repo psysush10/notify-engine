@@ -6,12 +6,6 @@ import {
   tenantRepository,
 }
 from "../factories/respositoryFactory.js";
-
-import {
-  getTenantByIdDb
-}
-from "../repositories/tenantRepository.js";
-
 export const canTenantProcessEvent = async (tenantId) => {
 
   const tenant =

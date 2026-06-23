@@ -1,0 +1,9 @@
+ALTER TABLE tenant_users
+ADD COLUMN password_hash TEXT;
+
+ALTER TABLE tenant_users
+ADD COLUMN updated_at TIMESTAMP
+DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE tenant_users
+ADD COLUMN last_login_at TIMESTAMP;

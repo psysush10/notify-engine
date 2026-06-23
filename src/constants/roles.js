@@ -1,9 +1,15 @@
 export const ROLES = {
 
-  ADMIN:
-    "ADMIN",
+  SUPER_ADMIN:
+    "SUPER_ADMIN",
 
-  TENANT:
-    "TENANT"
+  TENANT_ADMIN:
+    "TENANT_ADMIN",
+
+  TENANT_OPERATOR:
+    "TENANT_OPERATOR",
+
+  VIEWER:
+    "VIEWER"
 
 };

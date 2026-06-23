@@ -1,6 +1,4 @@
-import { subscriptionRepository } from "../factories/respositoryFactory.js";
-
-import { updateTenantPlanDb } from "../repositories/tenantRepository.js";
+import { tenantRepository,subscriptionRepository } from "../factories/respositoryFactory.js";
 
 export const getSubscription = async (tenantId) => {
 
@@ -19,7 +17,7 @@ export const upgradeSubscription = async (
     tenantId
   );
 
-  await updateTenantPlanDb(
+  await tenantRepository.updatePlan(
     tenantId,
     plan
   );

@@ -1,5 +1,4 @@
-import express
-from "express";
+import express from "express";
 
 import { authenticate } from "../middleware/authMiddleware.js";
 
@@ -12,24 +11,37 @@ import {
 }
 from "../controllers/billingController.js";
 
+import { verifyJwt } from "../middleware/verifyJwt.js";
+
+import {authorize } from "../middleware/authorize.js";
+
+import { ROLES } from "../constants/roles.js";
+
 const router =
   express.Router();
 
+router.use(
+  verifyJwt
+);
+
+router.use(
+  authorize(
+    ROLES.TENANT_ADMIN
+  )
+);
+
 router.get(
   "/",
-  authenticate,
   getBillingAccountApi
 );
 
 router.put(
   "/",
-  authenticate,
   updateBillingAccountApi
 );
 
 router.get(
   "/invoice-preview",
-  authenticate,
   getInvoicePreviewApi
 );
 

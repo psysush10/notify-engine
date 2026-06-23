@@ -1,17 +1,11 @@
-import {
-
-  getMetricsDb,
-  getProcessingMetricsDb
-
-}
-from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js";
 
 export const getMetricsService =
 async (
   tenantId
 ) => {
 
-  return await getMetricsDb(
+  return await eventRepository.getMetrics(
     tenantId
   );
 
@@ -22,7 +16,7 @@ async (
   tenantId
 ) => {
 
-  return await getProcessingMetricsDb(
+  return await eventRepository.getProcessingMetrics(
     tenantId
   );
 

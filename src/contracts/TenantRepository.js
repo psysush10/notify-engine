@@ -10,4 +10,34 @@ export class TenantRepository {
 
   }
 
+  async create(
+    tenantId,
+    tenantName
+  ) {
+
+    throw new Error(
+      "Not implemented"
+    );
+
+  }
+
+  async getAll() {
+
+    throw new Error(
+      "Not implemented"
+    );
+
+  }
+
+  async updatePlan(
+    tenantId,
+    plan
+  ) {
+
+    throw new Error(
+      "Not implemented"
+    );
+
+  }
+
 }

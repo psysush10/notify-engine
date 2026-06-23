@@ -10,6 +10,9 @@ import {
   getEventByRequestIdAndTenantDb,
   updateEventStatusDb,
   getEventsByTenantDb,
+  getDashboardDb,
+  getMetricsDb,
+  getProcessingMetricsDb
 
 }
 from "../../repositories/eventRepository.js";
@@ -67,6 +70,40 @@ async getEvents(tenantId, status, page, limit) {
 
     );
 
+}
+
+async getDashboard() {
+
+  return await getDashboardDb();
+
+}
+
+async getMetrics(tenantId) {
+
+  return await getMetricsDb(
+    tenantId
+  );
+
+}
+
+async getProcessingMetrics(tenantId) {
+
+  return await getProcessingMetricsDb(
+    tenantId
+  );
+
+}
+
+async updateProcessingStart(requestId) {
+  return await updateEventProcessingStartDb(
+    requestId
+  );
+}
+
+async updateProcessingComplete(requestId) {
+  return await updateEventProcessingCompleteDb(
+    requestId
+  );
 }
 
 }

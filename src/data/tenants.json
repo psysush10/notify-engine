@@ -124,5 +124,32 @@
     "slackWebhook": "",
     "emailFrom": "",
     "webhookUrl": ""
+  },
+  "org_1782123942991": {
+    "tenantName": "Zendesk",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1782124460039": {
+    "tenantName": "Workday",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
+  },
+  "org_1782147165317": {
+    "tenantName": "Vajro",
+    "slackEnabled": true,
+    "emailEnabled": true,
+    "webhookEnabled": true,
+    "slackWebhook": "",
+    "emailFrom": "",
+    "webhookUrl": ""
   }
 }

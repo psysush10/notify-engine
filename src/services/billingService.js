@@ -4,43 +4,30 @@ from "../constants/plans.js";
 import { PLAN_PRICING, OVERAGE_RATE }
 from "../constants/pricing.js";
 
-import {
-  getTodayUsageDb,
-  getMonthlyUsageDb
-}
-from "../repositories/usageRepository.js";
-
-import {
-  getTenantByIdDb
-}
-from "../repositories/tenantRepository.js";
-
-import {
-  getSubscriptionDb
-}
-from "../repositories/subscriptionRepository.js";
-
-import {
-  getBillingAccountDb
-}
-from "../repositories/billingRepository.js";
+import { usageRepository, tenantRepository, subscriptionRepository, billingRepository } from "../factories/respositoryFactory.js"
 
 
 
 export const getInvoicePreview = async (tenantId) => {
 
   const billingAccount =
-    await getBillingAccountDb(
+    await billingRepository.getBillingAccount(
       tenantId
     );
 
+  if (!billingAccount) {
+  throw new Error(
+    `Billing account not configured for tenant ${tenantId}`
+  );
+}
+
   const subscription =
-    await getSubscriptionDb(
+    await subscriptionRepository.getSubscription(
       tenantId
     );
 
   const usage =
-    await getMonthlyUsageDb(
+    await usageRepository.getMonthlyUsage(
       tenantId
     );
 

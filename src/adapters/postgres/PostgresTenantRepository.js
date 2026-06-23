@@ -4,7 +4,12 @@ import {
 from "../../contracts/TenantRepository.js";
 
 import {
-  getTenantByIdDb
+
+  getTenantByIdDb,
+  createTenantDb,
+  getAllTenantsDb,
+  updateTenantPlanDb
+
 }
 from "../../repositories/tenantRepository.js";
 
@@ -17,6 +22,40 @@ extends TenantRepository {
 
     return await getTenantByIdDb(
       tenantId
+    );
+
+  }
+
+  async create(
+    tenantId,
+    tenantName
+  ) {
+
+    return await createTenantDb(
+
+      tenantId,
+      tenantName
+
+    );
+
+  }
+
+  async getAll() {
+
+    return await getAllTenantsDb();
+
+  }
+
+  async updatePlan(
+    tenantId,
+    plan
+  ) {
+
+    return await updateTenantPlanDb(
+
+      tenantId,
+      plan
+
     );
 
   }

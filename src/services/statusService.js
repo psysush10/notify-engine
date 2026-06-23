@@ -1,12 +1,11 @@
-import { getEventByRequestIdDb }
-from "../repositories/eventRepository.js";
+import { eventRepository } from "../factories/respositoryFactory.js";
 
 export const getEventStatusService =
 async (
   requestId
 ) => {
 
-  return await getEventByRequestIdDb(
+  return await eventRepository.getByRequestId(
     requestId
   );
 

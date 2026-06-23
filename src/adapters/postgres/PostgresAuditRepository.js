@@ -5,30 +5,32 @@ from "../../contracts/AuditRepository.js";
 
 import {
   createAuditLogDb,
-  getAuditTimelineDb
+  getAuditLogsDb
 }
-from "../../repositories/eventAuditRepository.js";
+from "../../repositories/auditRepository.js";
 
 export class PostgresAuditRepository
 extends AuditRepository {
 
   async createLog(
-    auditLog
+    tenantId,
+    action,
+    details
   ) {
 
     return await createAuditLogDb(
-      auditLog
+      tenantId,
+      action,
+      details
     );
 
   }
 
   async getLogs(
-    requestId,
     tenantId
   ) {
 
-    return await getAuditTimelineDb(
-      requestId,
+    return await getAuditLogsDb(
       tenantId
     );
 

@@ -40,4 +40,16 @@ async getEvents(tenantId,status,page,limit) {
 
 }
 
+async getDashboard() {
+  throw new Error("Not implemented");
+}
+
+async getMetrics(tenantId) {
+  throw new Error("Not implemented");
+}
+
+async getProcessingMetrics(tenantId) {
+  throw new Error("Not implemented");
+}
+
 }

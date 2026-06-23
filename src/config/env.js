@@ -9,7 +9,9 @@ const requiredEnvVars = [
 
   "ADMIN_USERNAME",
 
-  "ADMIN_PASSWORD"
+  "ADMIN_PASSWORD",
+
+  "JWT_SECRET"
 
 ];
 
@@ -64,6 +66,10 @@ export const env = {
     return Number(
       process.env.API_KEY_EXPIRY_DAYS
     ) || 90;
+  },
+
+  get jwtSecret(){
+    return process.env.JWT_SECRET;
   }
 
 };

@@ -45,7 +45,7 @@ export const authenticate = async (req, res, next) => {
     }
   );
   
-  req.role = ROLES.TENANT;
+  req.role = ROLES.TENANT_ADMIN;
   req.plan = tenant.plan;
 
   next();
