@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Import Wizard</title>
+
+  <style>
+
+    body {
+      font-family: Arial;
+      padding: 30px;
+    }
+
+    .step {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h1>CSV Import Wizard</h1>
+
+<div class="step">
+
+  <label>
+
+    Select CSV
+
+  </label>
+
+  <br><br>
+
+  <input
+    type="file"
+    id="csvFile"
+  />
+
+</div>
+
+<div class="step">
+
+  <button
+    onclick="uploadFile()"
+  >
+
+    Upload CSV
+
+  </button>
+
+</div>
+
+<div
+  id="uploadResult"
+></div>
+
+<div
+  id="processSection"
+></div>
+
+<div
+  id="statusSection"
+></div>
+
+<script>
+
+let currentJobId = null;
+
+const API_KEY =
+  "ntf_0d3d0a4e77c4879b";
+
+async function uploadFile() {
+
+  const file =
+    document
+      .getElementById(
+        "csvFile"
+      )
+      .files[0];
+
+  if (!file) {
+
+    alert(
+      "Choose a CSV file"
+    );
+
+    return;
+
+  }
+
+  const formData =
+    new FormData();
+
+  formData.append(
+    "tenantId",
+    "org_1782124460039"
+  );
+
+  formData.append(
+    "jobType",
+    "CUSTOMERS"
+  );
+
+  formData.append(
+    "file",
+    file
+  );
+
+  const response =
+    await fetch(
+
+      "/imports/upload",
+
+      {
+        method: "POST",
+
+        headers: {
+
+          Authorization:
+            `Bearer ${API_KEY}`
+
+        },
+
+        body:
+          formData
+
+      }
+
+    );
+
+  const result =
+    await response.json();
+
+  currentJobId =
+    result.jobId;
+
+  document
+    .getElementById(
+      "uploadResult"
+    )
+    .innerHTML =
+
+      `
+      <div class="status">
+
+        Job Created:
+        ${result.jobId}
+
+      </div>
+      `;
+
+  document
+    .getElementById(
+      "processSection"
+    )
+    .innerHTML =
+
+      `
+      <button
+        onclick="processImport()"
+      >
+
+        Process Import
+
+      </button>
+      `;
+
+}
+
+async function processImport() {
+
+  const response =
+    await fetch(
+
+      `/imports/${currentJobId}/process`,
+
+      {
+
+        method:
+          "POST",
+
+        headers: {
+
+          Authorization:
+            `Bearer ${API_KEY}`
+
+        }
+
+      }
+
+    );
+
+  const result =
+    await response.json();
+
+  document
+    .getElementById(
+      "statusSection"
+    )
+    .innerHTML =
+
+      `
+      <div class="status">
+
+        ${result.message}
+
+        <br><br>
+
+        <button
+          onclick="checkStatus()"
+        >
+
+          Refresh Status
+
+        </button>
+
+      </div>
+      `;
+
+}
+
+async function checkStatus() {
+
+  const response =
+    await fetch(
+
+      `/imports/${currentJobId}`,
+
+      {
+
+        headers: {
+
+          Authorization:
+            `Bearer ${API_KEY}`
+
+        }
+
+      }
+
+    );
+
+  const result =
+    await response.json();
+
+  document
+    .getElementById(
+      "statusSection"
+    )
+    .innerHTML =
+
+      `
+      <div class="status">
+
+        Status:
+        ${result.status}
+
+        <br>
+
+        Processed:
+        ${result.rows_processed}
+
+        <br>
+
+        Failed:
+        ${result.rows_failed}
+
+      </div>
+      `;
+
+}
+
+</script>
+
+</body>
+
+</html>
