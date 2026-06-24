@@ -6,10 +6,14 @@ import {
   createImportJobDb,
   getImportJobsDb,
   getImportJobDb,
-  updateImportJobStatusDb
+  updateImportJobStatusDb,
+  updateImportFilePathDb,
+  createImportErrorDb
 
 }
 from "../repositories/importRepository.js";
+
+import { validateCustomerRow } from "../utils/importValidation.js";
 
 export const startImportJob = async (
   tenantId,
@@ -77,17 +81,42 @@ export const processCsvFile = async (
     0
   );
 
+  
   return new Promise(
     (resolve, reject) => {
-
-      let rowsProcessed = 0;
+        
+        let rowNumber = 1;
+        let rowsProcessed = 0;
+        let rowsFailed = 0;
 
       fs
         .createReadStream(filePath)
         .pipe(csv())
-        .on("data", () => {
+        .on("data", async (row) => {
+            const errors =
+                validateCustomerRow(
+                    row
+                );
 
-          rowsProcessed++;
+            if (
+                errors.length > 0
+            ) {
+
+                rowsFailed++;
+
+                await createImportErrorDb(
+                    importJobId,
+                    rowNumber,
+                    errors.join(", ")
+                );
+
+            } else {
+
+                rowsProcessed++;
+
+            }
+
+            rowNumber++;
 
         })
         .on("end", async () => {
@@ -96,7 +125,7 @@ export const processCsvFile = async (
             importJobId,
             "COMPLETED",
             rowsProcessed,
-            0
+            rowsFailed
           );
 
           resolve();
@@ -119,3 +148,16 @@ export const processCsvFile = async (
   );
 
 };
+
+export const attachFileToImportJob =
+  async (
+    importJobId,
+    filePath
+  ) => {
+
+    return await updateImportFilePathDb(
+      importJobId,
+      filePath
+    );
+
+  };

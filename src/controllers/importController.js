@@ -2,7 +2,8 @@ import {
 
   startImportJob,
   getImportJobs,
-  getImportJob
+  getImportJob,
+  attachFileToImportJob
 
 }
 from "../services/importService.js";
@@ -121,13 +122,13 @@ export const updateImportProgressDb = async (
 export const processImportJobHandler = async (req, res) => {
 
     try {
-
-      const importJobId =
-        req.params.id;
-
+        const job =
+            await getImportJob(
+                req.params.id
+            );
       await processCsvFile(
-        importJobId,
-        "sample-data/customers.csv"
+        job.id,
+        job.file_path
       );
 
       return res.json({
@@ -144,4 +145,58 @@ export const processImportJobHandler = async (req, res) => {
             error.message
         });
     }
+};
+
+export const uploadCsvHandler = async (
+    req,
+    res
+  ) => {
+
+    try {
+
+
+      const {
+        tenantId,
+        jobType
+      } = req.body;
+
+      const job =
+        await startImportJob(
+          tenantId,
+          jobType,
+          req.file.originalname
+        );
+
+      await attachFileToImportJob(
+        job.id,
+        req.file.path
+      );
+
+      return res
+        .status(201)
+        .json({
+
+          jobId:
+            job.id,
+
+          status:
+            "PENDING",
+
+          fileName:
+            req.file.originalname
+
+        });
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .json({
+          message:
+            error.message
+        });
+
+    }
+
   };
+

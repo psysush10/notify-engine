@@ -115,3 +115,67 @@ export const updateImportJobStatusDb = async (
   return result.rows[0];
 
 };
+
+export const updateImportFilePathDb = async (
+    id,
+    filePath
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        UPDATE import_jobs
+        SET file_path = $2
+        WHERE id = $1
+        RETURNING *
+        `,
+
+        [
+          id,
+          filePath
+        ]
+
+      );
+
+    return result.rows[0];
+
+};
+
+export const createImportErrorDb = async (
+    importJobId,
+    rowNumber,
+    errorMessage
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        INSERT INTO import_errors
+        (
+          import_job_id,
+          row_number,
+          error_message
+        )
+        VALUES
+        (
+          $1,
+          $2,
+          $3
+        )
+        RETURNING *
+        `,
+
+        [
+          importJobId,
+          rowNumber,
+          errorMessage
+        ]
+
+      );
+
+    return result.rows[0];
+
+};
+

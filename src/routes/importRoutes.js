@@ -6,7 +6,8 @@ import {
   createImportJobApi,
   getImportJobsApi,
   getImportJobApi,
-  processImportJobHandler
+  processImportJobHandler,
+  uploadCsvHandler
 
 }
 from "../controllers/importController.js";
@@ -15,6 +16,8 @@ import {
   authenticate
 }
 from "../middleware/authMiddleware.js";
+
+import { upload } from "../config/multer.js";
 
 const router =
   express.Router();
@@ -41,6 +44,16 @@ router.get(
 router.post(
   "/:id/process",
   processImportJobHandler
+);
+
+router.post(
+  "/upload",
+
+  upload.single(
+    "file"
+  ),
+
+  uploadCsvHandler
 );
 
 export default router;
