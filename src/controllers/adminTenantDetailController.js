@@ -28,6 +28,8 @@ import {
 }
 from "../services/invoiceService.js";
 
+import { getUsers } from "../services/userService.js";
+
 import {
   PLAN_LIMITS
 }
@@ -84,6 +86,9 @@ async (
       await getTenantProducts(
         tenantId
       ) || [];
+
+    const users = await getUsers(tenantId) || [];
+    console.log(users);
 
     const invoices =
       await getInvoices(
@@ -215,19 +220,65 @@ button {
 
 <body>
 
+<div style="
+background:white;
+padding:15px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+">
+
+<a href="/admin/dashboard">
+🏠 Dashboard
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/health">
+🏥 Health
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/security">
+🔐 Security
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/architecture">
+🏗 Architecture
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/platform-logs">
+📊 Activity Center
+</a>
+
+<a href="/admin/data">
+📦 Data Portability
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/tenants">
+🏢 Tenants
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/logout">
+🚪 Logout
+</a>
+
+</div>
+
 <h1>
 🏢 ${tenant.tenant_name}
 </h1>
-
-<p>
-
-<a href="/admin/tenants">
-
-← Back to Tenants
-
-</a>
-
-</p>
 
 <div class="metrics">
 
@@ -533,6 +584,66 @@ ${invoice.invoice_month}
 
 <td>
 ${invoice.status}
+</td>
+
+</tr>
+
+`).join("")}
+
+</table>
+
+</div>
+
+<div class="card">
+
+<h2>
+👥 Tenant Users
+</h2>
+
+<table>
+
+<tr>
+
+<th>Email</th>
+
+<th>Role</th>
+
+<th>Status</th>
+
+<th>Last Login</th>
+
+</tr>
+
+${users.map(user => `
+
+<tr>
+
+<td>
+${user.email}
+</td>
+
+<td>
+${user.role}
+</td>
+
+<td>
+
+${user.status === "ACTIVE"
+
+? "🟢 ACTIVE"
+
+: "🔴 INACTIVE"}
+
+</td>
+
+<td>
+
+${user.last_login_at
+? new Date(
+    user.last_login_at
+  ).toLocaleString()
+: "-"}
+
 </td>
 
 </tr>

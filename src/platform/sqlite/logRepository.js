@@ -52,3 +52,52 @@ export const saveLog =
   );
 
 };
+
+export const getRecentLogs = () => {
+
+  return new Promise(
+
+    (
+      resolve,
+      reject
+    ) => {
+
+      sqliteDb.all(
+
+        `
+        SELECT *
+        FROM logs
+        ORDER BY id DESC
+        LIMIT 20
+        `,
+
+        [],
+
+        (
+          error,
+          rows
+        ) => {
+
+          if (error) {
+
+            reject(
+              error
+            );
+
+          } else {
+
+            resolve(
+              rows
+            );
+
+          }
+
+        }
+
+      );
+
+    }
+
+  );
+
+};

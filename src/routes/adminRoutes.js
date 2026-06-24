@@ -25,6 +25,11 @@ import { adminTenantDetail } from "../controllers/adminTenantDetailController.js
 import { upgradeTenantPlan } from "../controllers/adminSubscriptionController.js";
 import { toggleTenantProduct } from "../controllers/tenantProductController.js";
 import { rotateApiKeyAdmin } from "../controllers/apiKeyController.js";
+import { adminSecurityDashboard } from "../controllers/adminSecurityController.js";
+import { adminArchitectureDashboard } from "../controllers/adminArchitectureController.js";
+import { adminPlatformLogs } from "../controllers/adminPlatformLogsController.js";
+import { adminHealthDashboard } from "../controllers/adminHealthController.js";
+import { adminDataPortabilityDashboard } from "../controllers/adminDataPortabilityController.js";
 
 
 const router =
@@ -55,6 +60,11 @@ router.get(
 );
 
 router.get(
+  "/architecture",
+  adminArchitectureDashboard
+);
+
+router.get(
     "/revenue",
     getRevenueAnalyticsApi
 );
@@ -66,9 +76,23 @@ router.get(
 );
 
 router.get(
+  "/health",
+  adminHealthDashboard
+);
+
+router.get(
+  "/data",
+  adminDataPortabilityDashboard
+);
+
+router.get(
   "/tenants",
   adminTenants
 );
+
+router.get("/security", adminSecurityDashboard);
+
+router.get("/platform-logs",adminPlatformLogs);
 
 router.get(
   "/tenant/:tenantId",

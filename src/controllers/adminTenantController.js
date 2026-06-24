@@ -69,19 +69,65 @@ td{
 
 <body>
 
+<div style="
+background:white;
+padding:15px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+">
+
+<a href="/admin/dashboard">
+🏠 Dashboard
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/health">
+🏥 Health
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/security">
+🔐 Security
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/architecture">
+🏗 Architecture
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/platform-logs">
+📊 Activity Center
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/data">
+📦 Data Portability
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/tenants">
+🏢 Tenants
+</a>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<a href="/admin/logout">
+🚪 Logout
+</a>
+
+</div>
+
 <h1>
 🏢 Tenant Management
 </h1>
-
-<p>
-
-<a href="/admin/dashboard">
-
-← Admin Dashboard
-
-</a>
-
-</p>
 
 <div class="card">
 

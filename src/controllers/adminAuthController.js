@@ -3,6 +3,8 @@ import {
 }
 from "../config/index.js";
 
+import { saveLog } from "../platform/sqlite/logRepository.js";
+
 export const adminLoginPage =(req,res) => {
 
   res.send(`
@@ -127,11 +129,27 @@ export const adminLogin =(req,res) => {
     req.session.isAdmin =
       true;
 
+    saveLog(
+  "INFO",
+  "ADMIN_LOGIN_SUCCESS",
+  {
+    username
+  }
+);
+
     return res.redirect(
       "/admin/dashboard"
     );
 
   }
+
+  saveLog(
+  "WARN",
+  "ADMIN_LOGIN_FAILED",
+  {
+    username
+  }
+);
 
   res.send(
     "Invalid credentials"
@@ -140,6 +158,12 @@ export const adminLogin =(req,res) => {
 };
 
 export const adminLogout =(req,res) => {
+
+  saveLog(
+  "INFO",
+  "ADMIN_LOGOUT",
+  {}
+);
 
   req.session.destroy(
     () => {

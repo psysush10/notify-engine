@@ -74,7 +74,9 @@ export const getTenantUsersDb = async (
         email,
         role,
         status,
-        created_at
+        created_at,
+        last_login_at
+        
       FROM tenant_users
       WHERE tenant_id = $1
       ORDER BY created_at DESC
