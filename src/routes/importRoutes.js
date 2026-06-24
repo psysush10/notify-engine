@@ -7,7 +7,8 @@ import {
   getImportJobsApi,
   getImportJobApi,
   processImportJobHandler,
-  uploadCsvHandler
+  uploadCsvHandler,
+  getImportErrorsApi
 
 }
 from "../controllers/importController.js";
@@ -31,9 +32,24 @@ router.post(
   createImportJobApi
 );
 
+router.post(
+  "/upload",
+
+  upload.single(
+    "file"
+  ),
+
+  uploadCsvHandler
+);
+
 router.get(
   "/",
   getImportJobsApi
+);
+
+router.get(
+  "/:id/errors",
+  getImportErrorsApi
 );
 
 router.get(
@@ -46,14 +62,5 @@ router.post(
   processImportJobHandler
 );
 
-router.post(
-  "/upload",
-
-  upload.single(
-    "file"
-  ),
-
-  uploadCsvHandler
-);
 
 export default router;

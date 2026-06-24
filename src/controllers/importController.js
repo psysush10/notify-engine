@@ -3,7 +3,8 @@ import {
   startImportJob,
   getImportJobs,
   getImportJob,
-  attachFileToImportJob
+  attachFileToImportJob,
+  getImportErrors
 
 }
 from "../services/importService.js";
@@ -194,6 +195,37 @@ export const uploadCsvHandler = async (
         .json({
           message:
             error.message
+        });
+
+    }
+
+};
+
+export const getImportErrorsApi = async (
+    req,
+    res
+  ) => {
+
+    try {
+
+      const errors =
+        await getImportErrors(
+          req.params.id
+        );
+
+      return res.json(
+        errors
+      );
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .json({
+
+          message:
+            error.message
+
         });
 
     }

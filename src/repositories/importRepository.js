@@ -179,3 +179,28 @@ export const createImportErrorDb = async (
 
 };
 
+export const getImportErrorsDb = async (
+    importJobId
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        SELECT
+          row_number,
+          error_message
+        FROM import_errors
+        WHERE import_job_id = $1
+        ORDER BY row_number
+        `,
+
+        [
+          importJobId
+        ]
+
+      );
+
+    return result.rows;
+
+  };

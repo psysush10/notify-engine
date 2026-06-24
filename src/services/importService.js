@@ -8,7 +8,8 @@ import {
   getImportJobDb,
   updateImportJobStatusDb,
   updateImportFilePathDb,
-  createImportErrorDb
+  createImportErrorDb,
+  getImportErrorsDb
 
 }
 from "../repositories/importRepository.js";
@@ -149,8 +150,7 @@ export const processCsvFile = async (
 
 };
 
-export const attachFileToImportJob =
-  async (
+export const attachFileToImportJob = async (
     importJobId,
     filePath
   ) => {
@@ -160,4 +160,13 @@ export const attachFileToImportJob =
       filePath
     );
 
-  };
+};
+
+export const getImportErrors = async (
+    importJobId
+  ) => {
+
+    return await getImportErrorsDb(
+      importJobId
+    );
+};
