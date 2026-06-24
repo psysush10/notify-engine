@@ -22,6 +22,7 @@ import authRoutes from "./routes/authRoutes.js";
 import testJwtRoutes from "./routes/testJwtRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import importRoutes from "./routes/importRoutes.js";
 
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { requestIdMiddleware } from "./middleware/requestIdMiddleware.js";
@@ -74,6 +75,11 @@ app.use(
 app.use(
   "/metrics",
   metricsRoutes
+);
+
+app.use(
+  "/imports",
+  importRoutes
 );
 
 app.use(
