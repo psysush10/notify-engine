@@ -40,20 +40,77 @@ export const createImportJobApi = async (
 };
 
 export const getImportJobsApi = async (
-  req,
-  res
-) => {
+    req,
+    res
+  ) => {
 
-  const jobs =
-    await getImportJobs(
-      req.tenantId
-    );
+    try {
 
-  res.json(
-    jobs
-  );
+        console.log(req.user);
 
-};
+      const tenantId = req.tenantId;
+
+      const {
+        status,
+        jobType,
+        page = 1,
+        limit = 10
+      } = req.query;
+
+      const result =
+        await getImportJobs(
+          tenantId,
+          {
+            status,
+            jobType,
+            page:
+              Number(page),
+
+            limit:
+              Number(limit)
+          }
+        );
+
+      return res.json({
+
+        data:
+          result.jobs,
+
+        pagination: {
+
+          page:
+            Number(page),
+
+          limit:
+            Number(limit),
+
+          total:
+            result.total,
+
+          totalPages:
+            Math.ceil(
+              result.total /
+              Number(limit)
+            )
+
+        }
+
+      });
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .json({
+
+          message:
+            error.message
+
+        });
+
+    }
+
+  };
 
 export const getImportJobApi = async (
   req,

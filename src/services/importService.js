@@ -31,11 +31,13 @@ export const startImportJob = async (
 };
 
 export const getImportJobs = async (
-  tenantId
+  tenantId,
+  filters
 ) => {
 
   return await getImportJobsDb(
-    tenantId
+    tenantId,
+    filters
   );
 
 };

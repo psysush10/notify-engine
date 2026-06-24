@@ -40,24 +40,98 @@ export const createImportJobDb = async (
 };
 
 export const getImportJobsDb = async (
-  tenantId
+  tenantId,
+  filters
 ) => {
 
-  const result =
+  const {
+    status,
+    jobType,
+    page = 1,
+    limit = 10
+  } = filters;
+
+  const offset =
+    (page - 1) * limit;
+
+  let whereClause =
+    "WHERE tenant_id = $1";
+
+  const values = [tenantId];
+
+  let index = 2;
+
+  if (status) {
+
+    whereClause +=
+      ` AND status = $${index}`;
+
+    values.push(status);
+
+    index++;
+
+  }
+
+  if (jobType) {
+
+    whereClause +=
+      ` AND job_type = $${index}`;
+
+    values.push(jobType);
+
+    index++;
+
+  }
+
+  const dataQuery = `
+    SELECT *
+    FROM import_jobs
+    ${whereClause}
+    ORDER BY created_at DESC
+    LIMIT $${index}
+    OFFSET $${index + 1}
+  `;
+
+  values.push(limit);
+  values.push(offset);
+
+  const dataResult =
     await pool.query(
-
-      `
-      SELECT *
-      FROM import_jobs
-      WHERE tenant_id = $1
-      ORDER BY id DESC
-      `,
-
-      [tenantId]
-
+      dataQuery,
+      values
     );
 
-  return result.rows;
+  const countValues =
+    values.slice(
+      0,
+      values.length - 2
+    );
+
+  const countQuery = `
+    SELECT COUNT(*) AS total
+    FROM import_jobs
+    ${whereClause}
+  `;
+
+  const countResult =
+    await pool.query(
+      countQuery,
+      countValues
+    );
+
+  return {
+
+    jobs:
+      dataResult.rows,
+
+    total:
+      Number(
+        countResult
+          .rows[0]
+          .total
+      )
+
+  };
 
 };
 
