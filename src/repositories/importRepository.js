@@ -321,3 +321,51 @@ export const createRetryImportJobDb = async (
     return result.rows[0];
 
 };
+
+export const getImportMetricsDb = async (
+    tenantId
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        SELECT
+
+          COUNT(*) AS total_imports,
+
+          COUNT(
+            CASE
+              WHEN status = 'COMPLETED'
+              THEN 1
+            END
+          ) AS completed_imports,
+
+          COUNT(
+            CASE
+              WHEN status = 'FAILED'
+              THEN 1
+            END
+          ) AS failed_imports,
+
+          COUNT(
+            CASE
+              WHEN status = 'PROCESSING'
+              THEN 1
+            END
+          ) AS processing_imports
+
+        FROM import_jobs
+
+        WHERE tenant_id = $1
+        `,
+
+        [
+          tenantId
+        ]
+
+      );
+
+    return result.rows[0];
+
+  };

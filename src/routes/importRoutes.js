@@ -9,7 +9,8 @@ import {
   processImportJobHandler,
   uploadCsvHandler,
   getImportErrorsApi,
-  retryImportJobApi
+  retryImportJobApi,
+  getImportMetricsApi
 
 }
 from "../controllers/importController.js";
@@ -51,6 +52,11 @@ router.get(
 router.post(
   "/:id/retry",
   retryImportJobApi
+);
+
+router.get(
+  "/metrics",
+  getImportMetricsApi
 );
 
 router.get(

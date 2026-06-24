@@ -10,7 +10,8 @@ import {
   updateImportFilePathDb,
   createImportErrorDb,
   getImportErrorsDb,
-  createRetryImportJobDb
+  createRetryImportJobDb,
+  getImportMetricsDb
 
 }
 from "../repositories/importRepository.js";
@@ -213,5 +214,57 @@ export const retryImportJob = async (
       createRetryImportJobDb(
         originalJob
       );
+
+};
+
+export const getImportMetrics = async (
+    tenantId
+  ) => {
+
+    const metrics =
+      await getImportMetricsDb(
+        tenantId
+      );
+
+    const total =
+      Number(
+        metrics.total_imports
+      );
+
+    const completed =
+      Number(
+        metrics.completed_imports
+      );
+
+    return {
+
+      totalImports:
+        total,
+
+      completedImports:
+        completed,
+
+      failedImports:
+        Number(
+          metrics.failed_imports
+        ),
+
+      processingImports:
+        Number(
+          metrics.processing_imports
+        ),
+
+      successRate:
+        total === 0
+          ? 0
+          : Number(
+              (
+                completed /
+                total *
+                100
+              ).toFixed(2)
+            )
+
+    };
 
   };
