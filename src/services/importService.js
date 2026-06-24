@@ -75,6 +75,7 @@ export const processCsvFile = async (
   filePath
 ) => {
 
+    try{
   await updateImportJobStatusDb(
     importJobId,
     "PROCESSING",
@@ -147,6 +148,21 @@ export const processCsvFile = async (
 
     }
   );
+}catch(error){
+        await updateImportJobStatusDb(
+
+            importJobId,
+
+            "FAILED",
+
+            0,
+
+            0
+
+        );
+
+        throw error;
+}
 
 };
 

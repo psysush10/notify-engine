@@ -127,24 +127,44 @@ export const processImportJobHandler = async (req, res) => {
             await getImportJob(
                 req.params.id
             );
-      await processCsvFile(
-        job.id,
-        job.file_path
-      );
 
-      return res.json({
-        message:
-          "CSV processed successfully"
-      });
+        if (
+            job.status ===
+            "PROCESSING"
+        ) {
 
-    } catch (error) {
+            return res
+                .status(409)
+                .json({
+
+                    message:
+                        "Import already processing"
+
+                });
+
+        }
+
+        processCsvFile(
+            job.id,
+            job.file_path
+        ).catch(console.error)
 
       return res
-        .status(500)
-        .json({
-          message:
-            error.message
-        });
+            .status(202)
+            .json({
+
+                message:
+                    "Import accepted",
+
+                importJobId:
+                    job.id,
+
+                status:
+                    "PROCESSING"
+
+            });
+    }catch(error){
+        console.log(error);
     }
 };
 
