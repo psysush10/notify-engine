@@ -6,7 +6,8 @@ import {
   attachFileToImportJob,
   getImportErrors,
   retryImportJob,
-  getImportMetrics
+  getImportMetrics,
+  getImportDashboard
 
 }
 from "../services/importService.js";
@@ -384,7 +385,38 @@ export const getImportMetricsApi = async (
 
     }
 
-  };
+};
+
+export const getImportDashboardApi = async (
+    req,
+    res
+  ) => {
+
+    try {
+
+      const dashboard =
+        await getImportDashboard(
+          req.tenantId
+        );
+
+      return res.json(
+        dashboard
+      );
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .json({
+
+          message:
+            error.message
+
+        });
+
+    }
+
+};
 
 
 

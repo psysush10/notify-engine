@@ -1,6 +1,7 @@
 import express from "express";
 import session from "express-session";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
 
 import eventRoutes from "./routes/eventRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
@@ -29,8 +30,28 @@ import { requestIdMiddleware } from "./middleware/requestIdMiddleware.js";
 
 import { swaggerSpec } from "./config/swagger.js";
 import { env } from "./config/env.js";
+import { fileURLToPath } from "url";
 
 const app = express();
+
+const __filename =
+  fileURLToPath(
+    import.meta.url
+  );
+
+const __dirname =
+  path.dirname(
+    __filename
+  );
+
+app.use(
+  express.static(
+    path.join(
+      __dirname,
+      "public"
+    )
+  )
+);
 
 app.use(
   express.json({

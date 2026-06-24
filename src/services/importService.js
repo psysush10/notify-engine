@@ -11,7 +11,9 @@ import {
   createImportErrorDb,
   getImportErrorsDb,
   createRetryImportJobDb,
-  getImportMetricsDb
+  getImportMetricsDb,
+  getRecentImportJobsDb,
+  getRecentFailuresDb
 
 }
 from "../repositories/importRepository.js";
@@ -264,6 +266,36 @@ export const getImportMetrics = async (
                 100
               ).toFixed(2)
             )
+
+    };
+};
+
+export const getImportDashboard = async (
+    tenantId
+  ) => {
+
+    const metrics =
+      await getImportMetrics(
+        tenantId
+      );
+
+    const recentImports =
+      await getRecentImportJobsDb(
+        tenantId
+      );
+
+    const recentFailures =
+      await getRecentFailuresDb(
+        tenantId
+      );
+
+    return {
+
+      metrics,
+
+      recentImports,
+
+      recentFailures
 
     };
 

@@ -10,7 +10,8 @@ import {
   uploadCsvHandler,
   getImportErrorsApi,
   retryImportJobApi,
-  getImportMetricsApi
+  getImportMetricsApi,
+  getImportDashboardApi
 
 }
 from "../controllers/importController.js";
@@ -57,6 +58,11 @@ router.post(
 router.get(
   "/metrics",
   getImportMetricsApi
+);
+
+router.get(
+  "/dashboard",
+  getImportDashboardApi
 );
 
 router.get(

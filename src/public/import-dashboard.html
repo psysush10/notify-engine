@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Import Dashboard</title>
+
+  <style>
+
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      width: 180px;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    td,
+    th {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h1>Import Dashboard</h1>
+
+<div class="cards">
+
+  <div class="card">
+    <h3>Total</h3>
+    <div id="totalImports">0</div>
+  </div>
+
+  <div class="card">
+    <h3>Completed</h3>
+    <div id="completedImports">0</div>
+  </div>
+
+  <div class="card">
+    <h3>Failed</h3>
+    <div id="failedImports">0</div>
+  </div>
+
+  <div class="card">
+    <h3>Success Rate</h3>
+    <div id="successRate">0%</div>
+  </div>
+
+</div>
+
+<h2>Recent Imports</h2>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody id="recentImports"></tbody>
+
+</table>
+
+<h2>Recent Failed Imports</h2>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>File</th>
+      <th>Failed Rows</th>
+    </tr>
+  </thead>
+
+  <tbody id="recentFailures"></tbody>
+
+</table>
+
+<script>
+
+async function loadDashboard() {
+
+  const response =
+    await fetch(
+      "/imports/dashboard",
+      {
+        headers: {
+          Authorization:
+            "Bearer ntf_0d3d0a4e77c4879b"
+        }
+      }
+    );
+
+  const data =
+    await response.json();
+
+  document.getElementById(
+    "totalImports"
+  ).innerText =
+    data.metrics.totalImports;
+
+  document.getElementById(
+    "completedImports"
+  ).innerText =
+    data.metrics.completedImports;
+
+  document.getElementById(
+    "failedImports"
+  ).innerText =
+    data.metrics.failedImports;
+
+  document.getElementById(
+    "successRate"
+  ).innerText =
+    data.metrics.successRate + "%";
+
+  document.getElementById(
+    "recentImports"
+  ).innerHTML =
+
+    data.recentImports
+      .map(
+
+        item => `
+
+        <tr>
+          <td>${item.id}</td>
+          <td>${item.job_type}</td>
+          <td>${item.status}</td>
+        </tr>
+
+        `
+
+      )
+      .join("");
+
+  document.getElementById(
+    "recentFailures"
+  ).innerHTML =
+
+    data.recentFailures
+      .map(
+
+        item => `
+
+        <tr>
+          <td>${item.id}</td>
+          <td>${item.file_name}</td>
+          <td>${item.rows_failed}</td>
+        </tr>
+
+        `
+
+      )
+      .join("");
+
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

@@ -343,7 +343,7 @@ export const getImportMetricsDb = async (
 
           COUNT(
             CASE
-              WHEN status = 'FAILED'
+              WHEN rows_failed > 0
               THEN 1
             END
           ) AS failed_imports,
@@ -367,5 +367,68 @@ export const getImportMetricsDb = async (
       );
 
     return result.rows[0];
+
+};
+
+export const getRecentImportJobsDb = async (
+    tenantId
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        SELECT
+          id,
+          job_type,
+          file_name,
+          status,
+          rows_processed,
+          rows_failed,
+          created_at
+        FROM import_jobs
+        WHERE tenant_id = $1
+        ORDER BY created_at DESC
+        LIMIT 5
+        `,
+
+        [
+          tenantId
+        ]
+
+      );
+
+    return result.rows;
+
+};
+
+export const getRecentFailuresDb = async (
+    tenantId
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        SELECT
+          id,
+          file_name,
+          rows_failed,
+          created_at
+        FROM import_jobs
+        WHERE
+          tenant_id = $1
+          AND rows_failed > 0
+        ORDER BY created_at DESC
+        LIMIT 5
+        `,
+
+        [
+          tenantId
+        ]
+
+      );
+
+    return result.rows;
 
   };
