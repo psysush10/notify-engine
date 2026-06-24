@@ -155,6 +155,7 @@ th {
       "ntf_0d3d0a4e77c4879b";
 
     let currentJobId = null;
+    let pollingInterval = null;
 
     const dropZone =
       document.getElementById(
@@ -389,8 +390,8 @@ th {
 
         );
 
-      const result =
-        await response.json();
+      const result = await response.json();
+      startPolling();
 
       document
         .getElementById(
@@ -401,22 +402,51 @@ th {
         `
         <div class="status">
 
-          ${result.message}
+  <strong>
 
-          <br><br>
+    Import Processing
 
-          <button
-            onclick="checkStatus()"
-          >
+  </strong>
 
-            Refresh Status
+  <br><br>
 
-          </button>
+  ${result.message}
 
-        </div>
+  <br><br>
+
+  Status updates automatically.
+
+</div>
         `;
 
     }
+
+    function startPolling() {
+
+  if (
+    pollingInterval
+  ) {
+
+    clearInterval(
+      pollingInterval
+    );
+
+  }
+
+  pollingInterval =
+    setInterval(
+
+      async () => {
+
+        await checkStatus();
+
+      },
+
+      2000
+
+    );
+
+}
 
     async function checkStatus() {
 
@@ -440,6 +470,14 @@ th {
 
       const result =
         await response.json();
+
+        if(result.status === "COMPLETED"){
+            clearInterval(pollingInterval);
+        }
+
+        if(result.status === "FAILED"){
+            clearInterval(pollingInterval);
+        }
 
     const errorResponse = await fetch(`/imports/${currentJobId}/errors`,
         {
@@ -494,8 +532,9 @@ th {
 
   <br><br>
 
-  Status:
-  ${result.status}
+Current Status:
+
+${result.status}
 
   <br>
 
@@ -506,6 +545,13 @@ th {
 
   Rows Failed:
   ${result.rows_failed}
+
+  <br>
+
+Last Updated:
+
+${new Date()
+  .toLocaleTimeString()}
 
 </div>
 
