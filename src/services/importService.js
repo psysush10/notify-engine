@@ -9,7 +9,8 @@ import {
   updateImportJobStatusDb,
   updateImportFilePathDb,
   createImportErrorDb,
-  getImportErrorsDb
+  getImportErrorsDb,
+  createRetryImportJobDb
 
 }
 from "../repositories/importRepository.js";
@@ -188,3 +189,29 @@ export const getImportErrors = async (
       importJobId
     );
 };
+
+export const retryImportJob = async (
+    jobId
+  ) => {
+
+    const originalJob =
+      await getImportJobDb(
+        jobId
+      );
+
+    if (
+      !originalJob
+    ) {
+
+      throw new Error(
+        "Import job not found"
+      );
+
+    }
+
+    return await
+      createRetryImportJobDb(
+        originalJob
+      );
+
+  };

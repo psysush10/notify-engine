@@ -4,7 +4,8 @@ import {
   getImportJobs,
   getImportJob,
   attachFileToImportJob,
-  getImportErrors
+  getImportErrors,
+  retryImportJob
 
 }
 from "../services/importService.js";
@@ -307,5 +308,49 @@ export const getImportErrorsApi = async (
 
     }
 
-  };
+};
+
+export const retryImportJobApi = async (
+    req,
+    res
+  ) => {
+
+    try {
+
+      const job =
+        await retryImportJob(
+          req.params.id
+        );
+
+        processCsvFile(
+            job.id,
+            job.file_path
+        ).catch(console.error);
+
+      return res
+        .status(201)
+        .json({
+
+          message:
+            "Retry job created",
+
+          jobId:
+            job.id
+
+        });
+
+    } catch (error) {
+
+      return res
+        .status(500)
+        .json({
+
+          message:
+            error.message
+
+        });
+
+    }
+
+};
 

@@ -277,4 +277,47 @@ export const getImportErrorsDb = async (
 
     return result.rows;
 
-  };
+};
+
+export const createRetryImportJobDb = async (
+    originalJob
+  ) => {
+
+    const result =
+      await pool.query(
+
+        `
+        INSERT INTO import_jobs
+        (
+          tenant_id,
+          job_type,
+          file_name,
+          file_path,
+          status,
+          retried_from_job_id
+        )
+        VALUES
+        (
+          $1,
+          $2,
+          $3,
+          $4,
+          'PENDING',
+          $5
+        )
+        RETURNING *
+        `,
+
+        [
+          originalJob.tenant_id,
+          originalJob.job_type,
+          originalJob.file_name,
+          originalJob.file_path,
+          originalJob.id
+        ]
+
+      );
+
+    return result.rows[0];
+
+};
