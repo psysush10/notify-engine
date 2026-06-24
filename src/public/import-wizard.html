@@ -112,6 +112,12 @@ th {
 
 }
 
+.success-box {
+
+  border: 2px solid #198754;
+
+}
+
   </style>
 
 </head>
@@ -177,6 +183,7 @@ th {
     let currentJobId = null;
     let currentStep = 1;
     let pollingInterval = null;
+    let importStartTime = null;
 
     function updateStep(
   step,
@@ -429,6 +436,8 @@ th {
 
     async function processImport() {
 
+        importStartTime = new Date();
+
       const response =
         await fetch(
 
@@ -483,6 +492,7 @@ th {
     }
 
     function startPolling() {
+        console.log("Polling started");
 
   if (
     pollingInterval
@@ -498,7 +508,7 @@ th {
     setInterval(
 
       async () => {
-
+        console.log("Polling...");
         await checkStatus();
 
       },
@@ -528,13 +538,97 @@ th {
           }
 
         );
+        const result = await response.json();
+        console.log(result);
 
-      const result =
-        await response.json();
+        let durationSeconds = 0;
+
+        if (importStartTime) {
+
+        durationSeconds =
+            Math.floor(
+
+            (
+                new Date() -
+                importStartTime
+            ) / 1000
+
+            );
+
+        }
+
+const totalRows = Number( result.rows_processed || 0 )
+
+  +
+
+  Number(
+    result.rows_failed || 0
+  );
+
+const successRate =
+
+  totalRows === 0
+
+    ? 0
+
+    : (
+
+        (
+          result.rows_processed
+          /
+          totalRows
+        )
+
+        * 100
+
+      ).toFixed(2);
+
+      const summaryHtml =
+
+`
+<div class="status success-box">
+
+  <strong>
+
+    Import Summary
+
+  </strong>
+
+  <br><br>
+
+  Total Rows:
+  ${totalRows}
+
+  <br>
+
+  Processed:
+  ${result.rows_processed}
+
+  <br>
+
+  Failed:
+  ${result.rows_failed}
+
+  <br>
+
+  Success Rate:
+  ${successRate}%
+
+  <br>
+
+  Duration:
+  ${durationSeconds}
+  sec
+
+</div>
+`;
+
+
 
         if(result.status === "COMPLETED"){
             clearInterval(pollingInterval);
             updateStep(4, "Import Completed");
+            document.getElementById("uploadResult").innerHTML = summaryHtml;
         }
 
         if(result.status === "FAILED"){
@@ -556,7 +650,17 @@ th {
 
   errors.length === 0
 
-    ? "<p>No validation errors</p>"
+    ? `
+<tr>
+
+  <td colspan="2">
+
+    No validation errors found
+
+  </td>
+
+</tr>
+`
 
     : errors
         .map(
@@ -580,6 +684,29 @@ th {
         )
         .join("");
 
+        const hasErrors = errors.length > 0;
+        const downloadButton =
+
+  hasErrors
+
+    ?
+
+      `
+      <button
+        onclick="downloadErrorsCsv()"
+      >
+
+        Download Error Report
+
+      </button>
+
+      <br><br>
+      `
+
+    :
+
+      "";
+
       document
         .getElementById(
           "statusSection"
@@ -590,7 +717,7 @@ th {
             <div class="status">
 
   <strong>
-    Import Status
+    Import Completed
   </strong>
 
   <br><br>
@@ -625,6 +752,12 @@ ${new Date()
   <strong>
     Validation Errors
   </strong>
+
+  <br><br>
+
+${downloadButton}
+
+<br><br>
 
   <br><br>
 
@@ -663,6 +796,85 @@ ${new Date()
         `;
 
     }
+
+    async function downloadErrorsCsv() {
+
+  const response =
+    await fetch(
+
+      `/imports/${currentJobId}/errors`,
+
+      {
+
+        headers: {
+
+          Authorization:
+            `Bearer ${API_KEY}`
+
+        }
+
+      }
+
+    );
+
+  const errors =
+    await response.json();
+
+  let csvContent =
+
+    "row_number,error_message\n";
+
+  errors.forEach(
+
+    error => {
+
+      csvContent +=
+
+        `${error.row_number},"${error.error_message}"\n`;
+
+    }
+
+  );
+
+  const blob =
+    new Blob(
+
+      [csvContent],
+
+      {
+        type:
+          "text/csv"
+      }
+
+    );
+
+  const url =
+    window.URL.createObjectURL(
+      blob
+    );
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+  link.href =
+    url;
+
+  link.download =
+    `import-errors-${currentJobId}.csv`;
+
+  document.body.appendChild(
+    link
+  );
+
+  link.click();
+
+  document.body.removeChild(
+    link
+  );
+
+}
 
   </script>
 
