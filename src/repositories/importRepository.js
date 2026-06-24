@@ -1,7 +1,6 @@
 import {pool} from "../config/db.js";
 
-export const createImportJobDb =
-async (
+export const createImportJobDb = async (
   tenantId,
   jobType,
   fileName
@@ -40,8 +39,7 @@ async (
 
 };
 
-export const getImportJobsDb =
-async (
+export const getImportJobsDb = async (
   tenantId
 ) => {
 
@@ -63,8 +61,7 @@ async (
 
 };
 
-export const getImportJobDb =
-async (
+export const getImportJobDb = async (
   id
 ) => {
 
@@ -85,8 +82,7 @@ async (
 
 };
 
-export const updateImportJobStatusDb =
-async (
+export const updateImportJobStatusDb = async (
   id,
   status,
   rowsProcessed,

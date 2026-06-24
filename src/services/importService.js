@@ -1,3 +1,6 @@
+import fs from "fs";
+import csv from "csv-parser";
+
 import {
 
   createImportJobDb,
@@ -8,8 +11,7 @@ import {
 }
 from "../repositories/importRepository.js";
 
-export const startImportJob =
-async (
+export const startImportJob = async (
   tenantId,
   jobType,
   fileName
@@ -23,8 +25,7 @@ async (
 
 };
 
-export const getImportJobs =
-async (
+export const getImportJobs = async (
   tenantId
 ) => {
 
@@ -34,8 +35,7 @@ async (
 
 };
 
-export const getImportJob =
-async (
+export const getImportJob = async (
   id
 ) => {
 
@@ -45,8 +45,7 @@ async (
 
 };
 
-export const completeImportJob =
-async (
+export const completeImportJob = async (
   id,
   rowsProcessed,
   rowsFailed
@@ -62,6 +61,61 @@ async (
 
     rowsFailed
 
+  );
+
+};
+
+export const processCsvFile = async (
+  importJobId,
+  filePath
+) => {
+
+  await updateImportJobStatusDb(
+    importJobId,
+    "PROCESSING",
+    0,
+    0
+  );
+
+  return new Promise(
+    (resolve, reject) => {
+
+      let rowsProcessed = 0;
+
+      fs
+        .createReadStream(filePath)
+        .pipe(csv())
+        .on("data", () => {
+
+          rowsProcessed++;
+
+        })
+        .on("end", async () => {
+
+          await updateImportJobStatusDb(
+            importJobId,
+            "COMPLETED",
+            rowsProcessed,
+            0
+          );
+
+          resolve();
+
+        })
+        .on("error", async (error) => {
+
+          await updateImportJobStatusDb(
+            importJobId,
+            "FAILED",
+            rowsProcessed,
+            0
+          );
+
+          reject(error);
+
+        });
+
+    }
   );
 
 };

@@ -5,7 +5,8 @@ import {
 
   createImportJobApi,
   getImportJobsApi,
-  getImportJobApi
+  getImportJobApi,
+  processImportJobHandler
 
 }
 from "../controllers/importController.js";
@@ -35,6 +36,11 @@ router.get(
 router.get(
   "/:id",
   getImportJobApi
+);
+
+router.post(
+  "/:id/process",
+  processImportJobHandler
 );
 
 export default router;
