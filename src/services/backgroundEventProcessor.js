@@ -29,19 +29,15 @@ export const processEventInBackground =
         config
       );
 
-      await createAuditLogDb({
-
-        requestId,
-
+      await auditRepository.createLog(
         tenantId,
-
-        status:
-          "PROCESSING",
-
-        message:
+        "PROCESSING",
+        {
+          requestId,
+          message:
           "Worker started processing"
-
-      });
+        }
+      );
 
       await eventRepository.updateStatus(
         requestId,
@@ -61,31 +57,30 @@ export const processEventInBackground =
 
       await eventRepository.updateProcessingComplete(requestId);
 
-      await auditRepository.createLog({
-
-        requestId,
+      await auditRepository.createLog(
 
         tenantId,
 
-        status:
-          eventStatus,
+        eventStatus,
 
-        message:
-          failureReason ||
-          "Processing completed"
+        {requestId,
+          message: failureReason || "Processing completed"
+        }
 
-      });
+      );
 
       
 
     } catch (error) {
 
-      await auditRepository.createLog({
-        requestId,
+      await auditRepository.createLog(
         tenantId,
-        status: "FAILED",
-        message: error.message
-      });
+        "FAILED",
+        {
+          requestId,
+          message: error.message
+        }
+        );
 
       logger.error("Background processing failed",
         { 
@@ -96,7 +91,7 @@ export const processEventInBackground =
         }
       );
 
-      await updateEventProcessingCompleteDb(requestId);
+      await eventRepository.updateProcessingComplete(requestId);
 
       await eventRepository.updateStatus(
         requestId,

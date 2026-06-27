@@ -12,7 +12,9 @@ import {
   getEventsByTenantDb,
   getDashboardDb,
   getMetricsDb,
-  getProcessingMetricsDb
+  getProcessingMetricsDb,
+  updateEventProcessingStartDb,
+  updateEventProcessingCompleteDb
 
 }
 from "../../repositories/eventRepository.js";

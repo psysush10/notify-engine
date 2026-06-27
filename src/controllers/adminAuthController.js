@@ -102,19 +102,19 @@ export const adminLogin =(req,res) => {
     password
   } = req.body;
 
-  console.log({
+//   console.log({
 
-  username,
+//   username,
 
-  password,
+//   password,
 
-  expectedUsername:
-    securityConfig.adminUsername,
+//   expectedUsername:
+//     securityConfig.adminUsername,
 
-  expectedPassword:
-    securityConfig.adminPassword
+//   expectedPassword:
+//     securityConfig.adminPassword
 
-});
+// });
 
   if (
 

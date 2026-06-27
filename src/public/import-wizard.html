@@ -175,6 +175,8 @@ th {
 
   <div id="statusSection"></div>
 
+   <div id="historySection"></div>
+
   <script>
 
     const API_KEY =
@@ -375,8 +377,8 @@ th {
 
         );
 
-      const result =
-        await response.json();
+      const result = await response.json();
+      loadImportHistory();
 
       currentJobId =
         result.jobId;
@@ -627,6 +629,7 @@ const successRate =
 
         if(result.status === "COMPLETED"){
             clearInterval(pollingInterval);
+            loadImportHistory();
             updateStep(4, "Import Completed");
             document.getElementById("uploadResult").innerHTML = summaryHtml;
         }
@@ -875,6 +878,171 @@ ${downloadButton}
   );
 
 }
+
+async function loadImportHistory() {
+
+
+
+  const response =
+    await fetch(
+
+      "/imports",
+
+      {
+
+        headers: {
+
+          Authorization:
+            `Bearer ${API_KEY}`
+
+        }
+
+      }
+
+    );
+
+  const responseData = await response.json();
+
+  const imports = responseData.data || [];
+
+  const historyRows =
+
+      imports.length === 0 
+
+      ? 
+      `
+      <tr>
+
+        <td
+          colspan="5"
+        >
+
+          No imports found
+
+        </td>
+
+      </tr>
+      `:
+
+    imports.slice(0,10)
+      .map(
+
+        item =>
+
+          `
+          <tr>
+
+            <td>
+              ${item.id}
+            </td>
+
+            <td>
+
+  ${
+    item.status ===
+    "COMPLETED"
+
+      ? "✅ COMPLETED"
+
+      : item.status ===
+        "FAILED"
+
+      ? "❌ FAILED"
+
+      : "⏳ PROCESSING"
+  }
+
+</td>
+
+            <td>
+              ${item.rows_processed}
+            </td>
+
+            <td>
+              ${item.rows_failed}
+            </td>
+
+            <td>
+              ${
+                new Date(
+                  item.created_at
+                )
+                .toLocaleString()
+              }
+            </td>
+
+          </tr>
+          `
+
+      )
+      .join("");
+
+  document
+    .getElementById(
+      "historySection"
+    )
+    .innerHTML =
+
+    `
+    <div class="status">
+
+      <strong>
+
+        Recent Imports
+
+      </strong>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Processed
+            </th>
+
+            <th>
+              Failed
+            </th>
+
+            <th>
+              Created
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${historyRows}
+
+        </tbody>
+
+      </table>
+
+    </div>
+    `;
+
+}
+
+window.onload =
+  () => {
+
+    loadImportHistory();
+
+  };
 
   </script>
 

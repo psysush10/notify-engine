@@ -76,18 +76,14 @@ export const handleEvent = async (req, res) => {
 
     });
 
-    await auditRepository.createLog({
-
-      requestId,
-
+    await auditRepository.createLog(
       tenantId,
-
-      status: "PENDING",
-
-      message:
-        "Event accepted"
-
-    });
+      "PENDING",
+      {
+        requestId,
+        message: "Event accepted"
+      }
+    );
 
     // setImmediate(() => {
 
@@ -279,33 +275,23 @@ export const replayEvent = async (req, res) => {
         replayedFromRequestId: requestId
       });
 
-      await auditRepository.createLog({
-
-        requestId,
-
+      await auditRepository.createLog(
         tenantId,
+        "REPLAYED",
+        {
+          requestId,
+          message: `Replayed as ${newRequestId}`
+        }
+      );
 
-        status:
-          "REPLAYED",
-
-        message:
-          `Replayed as ${newRequestId}`
-
-      });
-
-      await auditRepository.createLog({
-
-        requestId:
-          newRequestId,
-
+      await auditRepository.createLog(
         tenantId,
-
-        status: "PENDING",
-
-        message:
-          `Created from replay of ${requestId}`
-
-      });
+        "PENDING",
+        {
+          requestId: newRequestId,
+          message: `Created from replay of ${requestId}`
+        }
+      );
 
       res.json({
 

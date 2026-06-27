@@ -8,5 +8,5 @@ export const securityConfig = {
 
 };
 
-console.log(process.env.ADMIN_USERNAME);
-console.log(process.env.ADMIN_PASSWORD);
+// console.log(process.env.ADMIN_USERNAME);
+// console.log(process.env.ADMIN_PASSWORD);
