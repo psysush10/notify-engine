@@ -352,21 +352,9 @@ The Platform Implementation Inventory shall adhere to the following principles:
 
 ---
 
-# Platform Inventory
+# Platform Implementation Inventory
 
 The Notify Engine V3 implementation consists of the following implementation domains.
-
----
-
-# Applications
-
-Applications provide user-facing capabilities.
-
-| Component | Purpose |
-|------------|---------|
-| Customer Portal | Customer self-service capabilities |
-| Admin Portal | Platform administration |
-| Future Applications | Reserved for future platform expansion |
 
 ---
 
@@ -927,7 +915,7 @@ An enterprise-grade notification platform capable of supporting large-scale, clo
 |------------|-------|---------|
 | M1 | Platform Foundation | Establish core platform infrastructure |
 | M2 | Core Platform Services | Deliver reusable platform capabilities |
-| M3 | Core Platform Modules | Implement independent business modules |
+| M3 | Platform Modules | Implement independent business modules |
 | M4 | SaaS Readiness | Enable secure multi-tenant operation |
 | M5 | Operational Excellence | Prepare the platform for production support |
 | M6 | Enterprise Readiness | Scale, optimize, and future-proof the platform |
@@ -1058,7 +1046,7 @@ The Platform Capability Maturity Matrix provides implementation traceability by 
 ==========================================================================================================
 
 
-Section 7 – Implementation Phases
+# Section 7 – Implementation Phases
 
 ## Objective
 
@@ -1213,6 +1201,19 @@ Implementation should adhere to the following architectural principles:
 - Cross-cutting concerns shall be implemented once and shared platform-wide.
 - The platform shall support cloud-agnostic deployment models.
 - Platform components shall maintain low coupling and high cohesion.
+
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-006 | Platform Architecture |
+| ARB-008 | Security Architecture |
+| ARB-009 | Operational Architecture |
+| ARB-010 | Engineering & Delivery Architecture |
+
+The implementation outputs of this phase establish the architectural foundation required by all subsequent implementation phases.
 
 ---
 
@@ -1376,6 +1377,19 @@ Implementation should adhere to the following architectural principles:
 - Platform services shall support extensibility without requiring modification of consuming applications.
 - Technology-specific implementations shall remain isolated behind interfaces.
 
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-006 | Shared Packages, Service Boundaries, Communication Architecture |
+| ARB-008 | Platform Security Services |
+| ARB-009 | Observability, Resilience, Operational Services |
+| ARB-010 | Engineering Standards and Reusable Platform Services |
+
+The implementation outputs of this phase provide reusable technical services that support all platform modules and business applications.
+
 ---
 
 ### 6. Entry Criteria
@@ -1511,6 +1525,19 @@ Implementation should adhere to the following architectural principles:
 - Platform services shall be consumed through abstractions defined during Phase 2.
 - Each module shall maintain clear ownership and bounded responsibilities.
 
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-006 | Platform Module Architecture |
+| ARB-007 | Data Ownership and Persistence Architecture |
+| ARB-008 | Identity, Authentication, Authorization and Tenant Security |
+| ARB-010 | Modular Engineering Practices |
+
+The implementation outputs of this phase establish reusable business capabilities that can be consumed consistently across multiple applications.
+
 ---
 
 ### 6. Entry Criteria
@@ -1641,6 +1668,19 @@ Implementation should adhere to the following architectural principles:
 - Platform modules shall be reused rather than reimplemented.
 - Applications shall remain independently deployable.
 - The reference application shall establish implementation standards for future applications.
+
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-006 | Application Architecture and Service Composition |
+| ARB-007 | Application Data Ownership |
+| ARB-008 | Secure Application Integration |
+| ARB-010 | Application Engineering Practices |
+
+The implementation outputs of this phase validate the platform architecture through the implementation of business applications that consume platform services without introducing unnecessary coupling.
 
 ---
 
@@ -1781,6 +1821,19 @@ Implementation should adhere to the following architectural principles:
 - SaaS capabilities shall remain reusable across all hosted applications.
 - Commercial services shall integrate seamlessly with platform modules without introducing unnecessary coupling.
 
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-007 | Multi-Tenant Data Architecture |
+| ARB-008 | Tenant Security, Identity and Access Management |
+| ARB-009 | Platform Governance and Operational Policies |
+| ARB-010 | Governance and Delivery Standards |
+
+The implementation outputs of this phase enable the platform to operate securely as a governed, multi-tenant SaaS solution.
+
 ---
 
 ### 6. Entry Criteria
@@ -1919,6 +1972,18 @@ Implementation should adhere to the following architectural principles:
 - Diagnostics shall enable efficient root cause analysis.
 - Operational automation shall reduce manual intervention wherever practical.
 
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-008 | Operational Security Controls |
+| ARB-009 | Monitoring, Observability, Resilience and Operations |
+| ARB-010 | Quality Assurance, Deployment and Operational Governance |
+
+The implementation outputs of this phase prepare the platform for reliable production deployment, monitoring, support, and operational management.
+
 ---
 
 ### 6. Entry Criteria
@@ -2053,6 +2118,18 @@ Implementation should adhere to the following architectural principles:
 - Performance optimization shall not compromise architectural simplicity or maintainability.
 - Enterprise capabilities shall remain aligned with the platform's modular architecture.
 
+### Architecture Traceability
+
+The implementation activities within this phase primarily realise the following approved architectural decisions:
+
+| Architecture Review Board | Primary Focus |
+|---------------------------|---------------|
+| ARB-006 | Platform Evolution and Extensibility |
+| ARB-009 | Enterprise Operations and Scalability |
+| ARB-010 | Continuous Delivery, Engineering Governance and Platform Evolution |
+
+The implementation outputs of this phase prepare the platform for enterprise-scale deployment, long-term evolution, cloud portability, and continuous optimization.
+
 ---
 
 ### 6. Entry Criteria
@@ -2077,6 +2154,83 @@ This phase is considered complete when:
 - Platform extension mechanisms are documented.
 - Performance objectives have been achieved.
 - The platform is prepared for long-term architectural evolution.
+
+======================================================================================================================
+
+# Section 8 – Implementation Governance
+
+## Objective
+
+Implementation Governance defines the principles, controls, and review processes that ensure Notify Engine V3 is implemented in accordance with the approved platform architecture.
+
+The objective is to preserve architectural integrity throughout implementation while enabling engineering teams to deliver platform capabilities in a controlled, consistent, and traceable manner.
+
+Implementation governance complements the Architecture Review Boards by ensuring that architectural decisions remain consistently applied throughout the implementation lifecycle.
+
+---
+
+## Governance Principles
+
+Implementation shall adhere to the following governance principles:
+
+- Architecture shall govern implementation.
+- Approved architectural decisions shall not be modified without formal review.
+- Every implementation activity shall remain traceable to approved architecture.
+- Platform quality shall be continuously verified throughout implementation.
+- Documentation shall evolve alongside implementation.
+- Architectural compliance shall be validated before implementation completion.
+- Significant implementation deviations shall require architectural review.
+
+---
+
+## Governance Responsibilities
+
+| Responsibility | Owner |
+|----------------|-------|
+| Architecture Governance | Solution Architecture |
+| Implementation Planning | Technical Leadership |
+| Platform Development | Engineering Teams |
+| Quality Verification | QA Engineering |
+| Operational Readiness | Platform Engineering |
+| Documentation Maintenance | Engineering Teams |
+
+---
+
+## Architectural Compliance
+
+Throughout implementation, engineering teams should verify that:
+
+- Platform boundaries remain consistent with approved architecture.
+- Dependency rules are respected.
+- Platform modules remain independently maintainable.
+- Shared capabilities are reused rather than duplicated.
+- Technology-specific implementations remain isolated behind abstractions.
+- Architectural decisions continue to satisfy platform objectives.
+
+---
+
+## Change Management
+
+Implementation may identify opportunities for architectural improvement.
+
+Where proposed implementation changes affect approved architectural decisions:
+
+- The proposed change should be documented.
+- The impact should be evaluated.
+- The appropriate Architecture Review Board should review the proposal.
+- Approved changes should be reflected within the relevant Architecture Decision Records before implementation proceeds.
+
+---
+
+## Governance Success Criteria
+
+Implementation Governance shall be considered effective when:
+
+- Architectural integrity is preserved throughout implementation.
+- Platform capabilities remain aligned with approved Architecture Review Boards.
+- Architectural deviations are formally reviewed and approved.
+- Documentation accurately reflects the implemented platform.
+- Implementation remains traceable from architecture through production delivery.
 
 ---
 
@@ -2144,3 +2298,41 @@ Before advancing to the next phase, the implementation team should verify that:
 Where significant architectural deviations are identified, implementation should pause until the deviations have been reviewed and appropriate corrective actions have been approved.
 
 The successful completion of each phase provides the architectural foundation required for the subsequent implementation phase, ensuring that platform capabilities evolve in a controlled, incremental, and maintainable manner.
+
+==============================================================================================================
+
+# Relationship to Appendix A – Implementation Epic Catalogue
+
+The Implementation Blueprint defines the implementation strategy, architectural sequencing, capability maturity, and execution principles for Notify Engine V3.
+
+Appendix A extends this blueprint by defining the individual implementation epics required to realise the platform.
+
+Each implementation epic shall remain traceable to:
+
+- Architecture Review Boards
+- Architecture Decision Records
+- Implementation Phases
+- Implementation Milestones
+- Platform Capabilities
+- Platform Implementation Inventory
+
+The Appendix serves as the primary execution catalogue for engineering activities while remaining governed by this blueprint.
+
+Implementation epics provide the transition from architectural planning into executable engineering work without introducing new architectural direction.
+
+=================================================================================================================
+
+# Implementation Completion
+
+The implementation defined by this blueprint shall be considered complete when:
+
+- All implementation phases have satisfied their defined exit criteria.
+- All implementation milestones have been achieved.
+- Platform capabilities have reached the required maturity level.
+- Approved Architecture Review Boards have been fully implemented.
+- Architectural compliance has been verified.
+- Operational readiness has been demonstrated.
+- Documentation accurately reflects the implemented platform.
+- The platform is suitable for production deployment and long-term evolution.
+
+Completion of the implementation represents the successful realisation of the approved platform architecture and establishes the foundation for future platform enhancements through the Architecture Review Board governance process.
